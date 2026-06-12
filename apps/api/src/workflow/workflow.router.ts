@@ -1,13 +1,24 @@
 import { Input, Mutation, Query, Router } from 'nestjs-trpc';
-import { type CreateWorkflowDto, CreateWorkflowSchema } from '@repo/trpc';
+import {
+  type CreateWorkflowDto,
+  CreateWorkflowSchema,
+  WorkflowSchema,
+} from '@repo/trpc';
 import * as z from 'zod';
+import { WorkflowService } from './providers/workflow.service';
+import { Workflow } from './workflow.entity';
 
 /**
  * trpc router for workflows
  */
 @Router({ alias: 'workflow' })
 export class WorkflowRouter {
-  constructor() {}
+  constructor(
+    /**
+     * Injecting workflow Service
+     */
+    private readonly workflowService: WorkflowService,
+  ) {}
 
   /**
    *
@@ -15,10 +26,10 @@ export class WorkflowRouter {
    */
 
   @Query({
-    output: z.array(CreateWorkflowSchema),
+    output: z.array(WorkflowSchema),
   })
   public getWorkflows() {
-    return [];
+    return this.workflowService.getWorkflows();
   }
 
   /**
@@ -31,7 +42,6 @@ export class WorkflowRouter {
     output: CreateWorkflowSchema,
   })
   createWorkflow(@Input() createWorkflowDto: CreateWorkflowDto) {
-    console.log(createWorkflowDto);
-    return 'ok we are doing !!!!';
+    return this.workflowService.createWorkflow(createWorkflowDto);
   }
 }

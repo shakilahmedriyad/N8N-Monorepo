@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "dev": "nest start --watch",
+    "dev": "NODE_ENV=development nest start --watch",
     "generate:trpc": "npx nestjs-trpc generate --output ./../../packages/trpc/src/server",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -21,11 +21,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@repo/trpc": "workspace:*",
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.1",
+    "@repo/trpc": "workspace:*",
     "nestjs-trpc": "^2.9.1",
     "pg": "^8.21.0",
     "reflect-metadata": "^0.2.2",
