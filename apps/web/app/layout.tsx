@@ -4,6 +4,7 @@ import "./globals.css";
 import TrpcProvider from "../providers/TrpcProvider";
 import { Raleway, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 const montserratHeading = Montserrat({
   subsets: ["latin"],
@@ -28,7 +29,10 @@ export default function RootLayout({
       className={cn("font-sans", raleway.variable, montserratHeading.variable)}
     >
       <body>
-        <TrpcProvider>{children}</TrpcProvider>
+        <TrpcProvider>
+          {children}
+          <Toaster />
+        </TrpcProvider>
       </body>
     </html>
   );
