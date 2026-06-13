@@ -1,7 +1,7 @@
-"use server";
-import { trpc } from "@/lib/trpc/trpc";
-import { prefetch } from "@/lib/trpc/server";
+// features/workflow/server/prefetch.ts
+import { trpc } from "@/lib/trpc/server";
+import { prefetch } from "@/lib/trpc/trpc";
 
-export const workflowPrefetch = async () => {
+export async function prefetchWorkflows() {
   prefetch(trpc.workflow.getWorkflows.queryOptions());
-};
+}

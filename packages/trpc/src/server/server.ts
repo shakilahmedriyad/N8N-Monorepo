@@ -15,7 +15,7 @@ export const appRouter = t.router({
   workflow: t.router({
     getWorkflows: publicProcedure
       .output(z.array(WorkflowSchema))
-      .query(async () => []),
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     createWorkflow: publicProcedure
       .input(CreateWorkflowSchema)
       .output(CreateWorkflowSchema)

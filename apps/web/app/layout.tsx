@@ -4,7 +4,7 @@ import { Raleway, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { TrpcProvider } from "@/providers/TrpcProvider";
+import TrpcProvider from "@/providers/TrpcProvider";
 
 const montserratHeading = Montserrat({
   subsets: ["latin"],

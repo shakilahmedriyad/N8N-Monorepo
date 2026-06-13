@@ -1,11 +1,11 @@
-import { workflowPrefetch } from "@/features/workflow/server/prefetch";
 import { ErrorBoundary } from "react-error-boundary";
-import { HydrateClient } from "@/lib/trpc/server";
 import WorkflowView from "./components/workflow-view";
 import { Suspense } from "react";
-export const dynamic = "force-dynamic";
+import { prefetchWorkflows } from "@/features/workflow/server/prefetch";
+import { HydrateClient } from "@/lib/trpc/server";
+
 export default async function workflow() {
-  workflowPrefetch();
+  prefetchWorkflows();
   return (
     <HydrateClient>
       <ErrorBoundary fallback={<div>Error loading workflows</div>}>

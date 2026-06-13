@@ -1,28 +1,32 @@
 import "server-only"; // <-- ensure this file cannot be imported from the client
-import { TRPCQueryOptions } from "@trpc/tanstack-react-query";
+
+import {
+  createTRPCOptionsProxy,
+  TRPCQueryOptions,
+} from "@trpc/tanstack-react-query";
 import { headers } from "next/headers";
 import { cache } from "react";
 import { makeQueryClient } from "./query-client";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { appRouter } from "@repo/trpc";
-import { createTRPCContext } from "./context";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
 // IMPORTANT: Create a stable getter for the query client that
 //            will return the same client during the same request.
 export const getQueryClient = cache(makeQueryClient);
 
-export const caller: ReturnType<typeof appRouter.createCaller> =
-  appRouter.createCaller(async () =>
-    createTRPCContext({ headers: await headers() }),
-  );
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  // const user = await auth(opts.headers);
+  return { userId: "user_123" };
+};
 
-export function HydrateClient(props: { children: React.ReactNode }) {
-  const queryClient = getQueryClient();
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      {props.children}
-    </HydrationBoundary>
-  );
-}
+export const trpc = createTRPCOptionsProxy({
+  ctx: async () =>
+    createTRPCContext({
+      headers: await headers(),
+    }),
+  router: appRouter,
+  queryClient: getQueryClient,
+});
 
 export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
   queryOptions: T,
@@ -33,4 +37,13 @@ export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
   } else {
     void queryClient.prefetchQuery(queryOptions);
   }
+}
+
+export function HydrateClient(props: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {props.children}
+    </HydrationBoundary>
+  );
 }

@@ -1,9 +1,10 @@
 "use client";
-import useGetWorkflow from "@/features/workflow/hooks/use-get-workflow";
+
+import { trpc } from "@/lib/trpc/trpc";
 
 export default function WorkflowView() {
-  const { data: workflows } = useGetWorkflow();
-  console.log(workflows);
+  const { data: workflows } = trpc.workflow.getWorkflows.useQuery();
+
   return (
     <div>
       {workflows?.map((item) => (
