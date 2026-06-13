@@ -1,7 +1,8 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Workflow } from '../workflow.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import {
+  Injectable,
+  NotImplementedException,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { CreateWorkflowDto } from '@repo/trpc';
 
 /**
@@ -10,20 +11,15 @@ import { CreateWorkflowDto } from '@repo/trpc';
 
 @Injectable()
 export class WorkflowService {
-  constructor(
-    /**
-     * Injecting Workflow repository
-     */
-    @InjectRepository(Workflow)
-    private readonly workflowRepository: Repository<Workflow>,
-  ) {}
+  constructor /**
+   * Injecting Workflow repository
+   */() {}
   /**
    *creating new workflow
    */
   public async createWorkflow(createWorkflow: CreateWorkflowDto) {
     try {
-      const workflow = this.workflowRepository.create(createWorkflow);
-      return await this.workflowRepository.save(workflow);
+      throw new NotImplementedException();
     } catch (error) {
       throw new RequestTimeoutException('Could not create workflow');
     }
@@ -31,8 +27,7 @@ export class WorkflowService {
 
   public async getWorkflows() {
     try {
-      const workflows = await this.workflowRepository.find();
-      return workflows;
+      throw new NotImplementedException();
     } catch (error) {
       throw new RequestTimeoutException('Could not create workflow');
     }

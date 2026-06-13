@@ -6,7 +6,6 @@ import {
 } from '@repo/trpc';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
-import { Workflow } from './workflow.entity';
 
 /**
  * trpc router for workflows

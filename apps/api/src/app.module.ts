@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { TRPCModule } from 'nestjs-trpc';
 import { WorkflowModule } from './workflow/workflow.module';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 const ENV = process.env.NODE_ENV;
@@ -26,22 +25,8 @@ const ENV = process.env.NODE_ENV;
     TRPCModule.forRoot({}),
 
     /**
-     * initialize TypeOrmModule asynchronously to use ConfigService for database configuration
+     * initialize Prisma asynchronously to use ConfigService for database configuration
      **/
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: configService.get<string>('DATABASE_TYPE') as any,
-        host: configService.get<string>('DATABASE_HOST'),
-        autoLoadEntities: true,
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USER'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        synchronize: true,
-      }),
-    }),
   ],
   controllers: [],
   providers: [],
