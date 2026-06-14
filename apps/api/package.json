@@ -28,6 +28,7 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@repo/trpc": "workspace:*",
+    "@thallesp/nestjs-better-auth": "^2.6.1",
     "better-auth": "^1.6.18",
     "nestjs-trpc": "^2.9.1",
     "pg": "^8.21.0",

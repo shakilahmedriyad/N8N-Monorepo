@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 
 import { TRPCModule } from 'nestjs-trpc';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { WorkflowModule } from './workflow/workflow.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { auth } from 'authConfig';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -24,8 +26,10 @@ const ENV = process.env.NODE_ENV;
     TRPCModule.forRoot({}),
 
     /**
-     * initialize Prisma asynchronously to use ConfigService for database configuration
+     * initialize Better auth for authentication
      **/
+
+    AuthModule.forRoot({ auth }),
   ],
   controllers: [],
   providers: [],
