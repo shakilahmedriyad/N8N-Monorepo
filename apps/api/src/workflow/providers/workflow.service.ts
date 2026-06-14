@@ -12,7 +12,7 @@ import { CreateWorkflowDto } from '@repo/trpc';
 @Injectable()
 export class WorkflowService {
   constructor /**
-   * Injecting Workflow repository
+   * Injecting Prisma Database
    */() {}
   /**
    *creating new workflow

@@ -10,7 +10,6 @@ const ENV = process.env.NODE_ENV;
   imports: [
     WorkflowModule,
     UserModule,
-
     /**
      * initialize Config module
      **/

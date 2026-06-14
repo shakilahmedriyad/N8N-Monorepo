@@ -1,0 +1,27 @@
+{
+  "name": "@repo/database",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "prisma": "^7.8.0",
+    "typescript": "^5.9.2",
+    "@types/node": "^25.9.3"
+  }
+}
