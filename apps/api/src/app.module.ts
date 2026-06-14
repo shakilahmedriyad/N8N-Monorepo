@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
 import { TRPCModule } from 'nestjs-trpc';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WorkflowModule } from './workflow/workflow.module';
 import { UserModule } from './user/user.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
 const ENV = process.env.NODE_ENV;
 @Module({
