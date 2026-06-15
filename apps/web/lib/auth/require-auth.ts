@@ -1,10 +1,7 @@
-import { auth } from "@repo/auth/auth";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import getSession from "./get-session";
 
 export default async function requireAuth() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
   if (!session) redirect("/sign-in");
 }

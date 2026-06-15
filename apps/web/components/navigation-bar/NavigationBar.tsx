@@ -12,8 +12,9 @@ import {
 import { Activity, BlocksIcon, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserMenu } from "../user/user-menu";
 
-export default function NavigationBar() {
+export default function NavigationBar({ user }: { user: any }) {
   const pathname = usePathname();
   const NavItem = [
     {
@@ -56,13 +57,7 @@ export default function NavigationBar() {
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <p>Riyad Ahmed</p>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <UserMenu user={user} />
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
