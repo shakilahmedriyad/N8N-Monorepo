@@ -30,6 +30,7 @@
     "@repo/trpc": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/auth": "workspace:*",
+    "@repo/contracts": "workspace:*",
     "@thallesp/nestjs-better-auth": "^2.6.1",
     "better-auth": "^1.6.18",
     "nestjs-trpc": "^2.9.1",

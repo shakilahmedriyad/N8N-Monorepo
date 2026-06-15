@@ -44,6 +44,9 @@ importers:
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -275,6 +278,22 @@ importers:
         specifier: ^17.4.2
         version: 17.4.2
 
+  packages/contracts:
+    dependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.2
+
   packages/database:
     dependencies:
       '@prisma/client':
@@ -342,6 +361,9 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

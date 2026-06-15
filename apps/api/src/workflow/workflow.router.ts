@@ -3,7 +3,7 @@ import {
   type CreateWorkflowDto,
   CreateWorkflowSchema,
   WorkflowSchema,
-} from '@repo/trpc';
+} from '@repo/contracts';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
 
@@ -42,5 +42,15 @@ export class WorkflowRouter {
   })
   createWorkflow(@Input() createWorkflowDto: CreateWorkflowDto) {
     return this.workflowService.createWorkflow(createWorkflowDto);
+  }
+
+  @Query({
+    input: z.object({
+      id: z.string(),
+    }),
+    output: CreateWorkflowSchema,
+  })
+  public getWorkflowById() {
+    return this.workflowService.getWorkflows();
   }
 }
