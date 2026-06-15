@@ -8,6 +8,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -21,21 +22,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, User } from "lucide-react";
 import { authClient } from "@/lib/auth/client";
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(1, {
-    message: "Password is required.",
-  }),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+    email: z.string().email({
+      message: "Please enter a valid email address.",
+    }),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters.",
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -53,13 +63,14 @@ export default function SignInPage() {
     setError("");
 
     try {
-      const result = await authClient.signIn.email({
+      const result = await authClient.signUp.email({
         email: values.email,
         password: values.password,
+        name: values.name,
       });
 
       if (result.error) {
-        setError(result.error.message || "Failed to sign in");
+        setError(result.error.message || "Failed to create account");
       } else {
         router.push("/workflow");
       }
@@ -70,7 +81,7 @@ export default function SignInPage() {
     }
   }
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignUp = async () => {
     setIsLoading(true);
     try {
       await authClient.signIn.social({
@@ -78,7 +89,7 @@ export default function SignInPage() {
         callbackURL: "/workflow",
       });
     } catch (err) {
-      setError("Failed to sign in with Google");
+      setError("Failed to sign up with Google");
       setIsLoading(false);
     }
   };
@@ -88,13 +99,13 @@ export default function SignInPage() {
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-3 text-center">
           <div className="mx-auto w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mb-2 shadow-sm">
-            <Lock className="w-7 h-7 text-primary-foreground" />
+            <User className="w-7 h-7 text-primary-foreground" />
           </div>
           <CardTitle className="text-3xl font-bold tracking-tight">
-            Welcome Back
+            Create Account
           </CardTitle>
           <CardDescription className="text-base">
-            Sign in to your account to continue
+            Sign up to get started with your account
           </CardDescription>
         </CardHeader>
 
@@ -107,6 +118,20 @@ export default function SignInPage() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
+              <Field>
+                <FieldLabel>Full Name</FieldLabel>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="John Doe"
+                    className="pl-10 h-11"
+                    {...register("name")}
+                  />
+                </div>
+                {errors.name && <FieldError>{errors.name.message}</FieldError>}
+              </Field>
+
               <Field>
                 <FieldLabel>Email</FieldLabel>
                 <div className="relative">
@@ -124,15 +149,7 @@ export default function SignInPage() {
               </Field>
 
               <Field>
-                <div className="flex items-center justify-between">
-                  <FieldLabel>Password</FieldLabel>
-                  <a
-                    href="/forgot-password"
-                    className="text-sm text-primary hover:underline underline-offset-4 font-medium"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
+                <FieldLabel>Password</FieldLabel>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -142,8 +159,27 @@ export default function SignInPage() {
                     {...register("password")}
                   />
                 </div>
+                <FieldDescription>
+                  Must be at least 8 characters long
+                </FieldDescription>
                 {errors.password && (
                   <FieldError>{errors.password.message}</FieldError>
+                )}
+              </Field>
+
+              <Field>
+                <FieldLabel>Confirm Password</FieldLabel>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    className="pl-10 h-11"
+                    {...register("confirmPassword")}
+                  />
+                </div>
+                {errors.confirmPassword && (
+                  <FieldError>{errors.confirmPassword.message}</FieldError>
                 )}
               </Field>
             </FieldGroup>
@@ -157,10 +193,10 @@ export default function SignInPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
-                "Sign In"
+                "Create Account"
               )}
             </Button>
           </form>
@@ -180,7 +216,7 @@ export default function SignInPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleSignUp}
               disabled={isLoading}
               className="h-11"
             >
@@ -208,13 +244,29 @@ export default function SignInPage() {
         </CardContent>
 
         <CardFooter className="flex-col space-y-2">
-          <div className="text-sm text-center text-muted-foreground">
-            Don't have an account?{" "}
+          <p className="text-xs text-center text-muted-foreground px-8">
+            By signing up, you agree to our{" "}
             <a
-              href="/sign-up"
+              href="/terms"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a
+              href="/privacy"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              Privacy Policy
+            </a>
+          </p>
+          <div className="text-sm text-center text-muted-foreground">
+            Already have an account?{" "}
+            <a
+              href="/sign-in"
               className="font-medium text-primary hover:underline underline-offset-4"
             >
-              Sign up
+              Sign in
             </a>
           </div>
         </CardFooter>

@@ -5,6 +5,9 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Activity, BlocksIcon, PencilIcon } from "lucide-react";
 import Link from "next/link";
@@ -34,20 +37,32 @@ export default function NavigationBar() {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar variant="floating">
       <SidebarHeader />
       <SidebarContent className="flex flex-col justify-between">
         <SidebarGroup className="flex flex-col gap-y-2.5">
-          {NavItem.map((item) => (
-            <Link key={item.url} href={item.url} className="">
-              <p className="flex text-sm gap-x-3.5">
-                {item.icon} {item.label}
-              </p>
-            </Link>
-          ))}
+          <SidebarMenu>
+            {NavItem.map((item) => (
+              <SidebarMenuItem key={item.url}>
+                <SidebarMenuButton asChild isActive={item.isActive}>
+                  <Link key={item.url} href={item.url} className="">
+                    <p className="flex text-sm gap-x-3.5">
+                      {item.icon} {item.label}
+                    </p>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup>
-          <p>Riyad Ahmed</p>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <p>Riyad Ahmed</p>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
