@@ -26,7 +26,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("font-sans", raleway.variable, montserratHeading.variable)}
+      className={cn(
+        "font-sans bg-accent-foreground",
+        raleway.variable,
+        montserratHeading.variable,
+      )}
     >
       <body>
         <TrpcProvider>

@@ -3,7 +3,7 @@ import {
   NotImplementedException,
   RequestTimeoutException,
 } from '@nestjs/common';
-import { CreateWorkflowDto } from '@repo/trpc';
+import { workflowCreateInput } from '@repo/database';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
 /**
@@ -18,7 +18,7 @@ export class WorkflowService {
   /**
    *creating new workflow
    */
-  public async createWorkflow(createWorkflow: CreateWorkflowDto) {
+  public async createWorkflow(createWorkflow: workflowCreateInput) {
     try {
       const workflow = await this.databaseService.workflow.create({
         data: createWorkflow,

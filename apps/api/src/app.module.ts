@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { WorkflowModule } from './workflow/workflow.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
-import { auth } from 'authConfig';
+import { auth } from '@repo/auth/auth';
 
 const ENV = process.env.NODE_ENV;
 @Module({
