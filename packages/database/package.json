@@ -12,7 +12,6 @@
   },
   "scripts": {
     "generate": "prisma generate",
-    "postinstall": "prisma generate",
     "build": "tsc -p tsconfig.json",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev"

@@ -6,6 +6,7 @@ import {
 } from '@repo/contracts';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
+import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 
 /**
  * trpc router for workflows
@@ -27,8 +28,8 @@ export class WorkflowRouter {
   @Query({
     output: z.array(WorkflowSchema),
   })
-  public getWorkflows() {
-    return this.workflowService.getWorkflows();
+  public async getWorkflows(@Session() session: UserSession) {
+    return await this.workflowService.getWorkflows(session);
   }
 
   /**
@@ -40,9 +41,20 @@ export class WorkflowRouter {
     input: CreateWorkflowSchema,
     output: CreateWorkflowSchema,
   })
-  createWorkflow(@Input() createWorkflowDto: CreateWorkflowDto) {
-    return this.workflowService.createWorkflow(createWorkflowDto);
+  public async createWorkflow(
+    @Input() createWorkflowDto: CreateWorkflowDto,
+    @Session() session: UserSession,
+  ) {
+    return await this.workflowService.createWorkflow(
+      createWorkflowDto,
+      session,
+    );
   }
+
+  /**
+   *
+   * route for getting workflow by id
+   */
 
   @Query({
     input: z.object({
@@ -50,7 +62,25 @@ export class WorkflowRouter {
     }),
     output: CreateWorkflowSchema,
   })
-  public getWorkflowById() {
-    return this.workflowService.getWorkflows();
+  public async getWorkflowById(
+    @Input() id: string,
+    @Session() session: UserSession,
+  ) {
+    return await this.workflowService.getWorkflowById(id, session);
+  }
+
+  /**
+   *
+   * route for removing workflow
+   */
+
+  @Query({
+    input: z.object({
+      id: z.string(),
+    }),
+    output: WorkflowSchema,
+  })
+  public async removeWorkflow(@Input() id, session: UserSession) {
+    return await this.workflowService.removeWorkflow(id, session);
   }
 }

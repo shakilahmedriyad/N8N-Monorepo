@@ -33,6 +33,12 @@ const appRouter = t.router({
       id: z.string(),
     }))
       .output(CreateWorkflowSchema)
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    removeWorkflow: publicProcedure
+      .input(z.object({
+      id: z.string(),
+    }))
+      .output(WorkflowSchema)
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
     })
 });

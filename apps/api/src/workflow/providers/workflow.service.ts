@@ -3,7 +3,8 @@ import {
   NotImplementedException,
   RequestTimeoutException,
 } from '@nestjs/common';
-import { workflowCreateInput } from '@repo/database';
+import { CreateWorkflowDto } from '@repo/contracts';
+import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
 /**
@@ -18,10 +19,13 @@ export class WorkflowService {
   /**
    *creating new workflow
    */
-  public async createWorkflow(createWorkflow: workflowCreateInput) {
+  public async createWorkflow(
+    createWorkflow: CreateWorkflowDto,
+    session: UserSession,
+  ) {
     try {
       const workflow = await this.databaseService.workflow.create({
-        data: createWorkflow,
+        data: { ...createWorkflow, userId: session.user.id },
       });
       return workflow;
     } catch (error) {
@@ -29,11 +33,44 @@ export class WorkflowService {
     }
   }
 
-  public async getWorkflows() {
+  public async getWorkflows(session: UserSession) {
     try {
-      throw new NotImplementedException();
+      const workflows = await this.databaseService.workflow.findMany({
+        where: {
+          userId: session.user.id,
+        },
+      });
+      return workflows;
     } catch (error) {
       throw new RequestTimeoutException('Could not create workflow');
+    }
+  }
+
+  public async getWorkflowById(id: string, session: UserSession) {
+    try {
+      const workflow = await this.databaseService.workflow.findMany({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+      return workflow;
+    } catch (error) {
+      throw new RequestTimeoutException('Could not create workflow');
+    }
+  }
+
+  public async removeWorkflow(id: string, session: UserSession) {
+    try {
+      const workflow = this.databaseService.workflow.delete({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+      return workflow;
+    } catch (error) {
+      throw new RequestTimeoutException();
     }
   }
 }
