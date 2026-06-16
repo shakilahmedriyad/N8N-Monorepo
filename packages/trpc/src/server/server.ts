@@ -15,11 +15,12 @@ const t = initTRPC.create();
 const publicProcedure = t.procedure;
 import { WorkflowSchema, CreateWorkflowSchema } from "@repo/contracts";
 
-const appRouter = t.router({
+export const appRouter = t.router({
   user: t.router({
-    getUser: publicProcedure
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
-    }),
+    getUser: publicProcedure.query(
+      async () => "PLACEHOLDER_DO_NOT_REMOVE" as any,
+    ),
+  }),
   workflow: t.router({
     getWorkflows: publicProcedure
       .output(z.array(WorkflowSchema))
@@ -29,18 +30,22 @@ const appRouter = t.router({
       .output(CreateWorkflowSchema)
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     getWorkflowById: publicProcedure
-      .input(z.object({
-      id: z.string(),
-    }))
+      .input(
+        z.object({
+          id: z.string(),
+        }),
+      )
       .output(CreateWorkflowSchema)
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     removeWorkflow: publicProcedure
-      .input(z.object({
-      id: z.string(),
-    }))
+      .input(
+        z.object({
+          id: z.string(),
+        }),
+      )
       .output(WorkflowSchema)
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
-    })
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

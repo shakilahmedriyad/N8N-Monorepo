@@ -56,9 +56,7 @@ export default function NavigationBar({ user }: { user: any }) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup>
-          <UserMenu user={user} />
-        </SidebarGroup>
+        <SidebarGroup>{/* <UserMenu user={user} /> */}</SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

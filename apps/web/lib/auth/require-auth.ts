@@ -3,5 +3,5 @@ import getSession from "./get-session";
 
 export default async function requireAuth() {
   const session = await getSession();
-  if (!session) redirect("/sign-in");
+  // if (!session) redirect("/sign-in");
 }

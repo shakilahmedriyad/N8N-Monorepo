@@ -14,10 +14,24 @@ export const trpc: CreateTRPCReact<AppRouter, object> = createTRPCReact<
 
 export const queryClient = new QueryClient({});
 
+function getUrl() {
+  if (typeof window !== "undefined") {
+    return "/trpc";
+  }
+
+  return process.env.API_URL!;
+}
+
 export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: process.env.NEXT_PUBLIC_API_URL!,
+      url: getUrl(),
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: "include",
+        });
+      },
     }),
   ],
 });

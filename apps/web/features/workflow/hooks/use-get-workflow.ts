@@ -1,8 +1,7 @@
-// "use client";
-// import { trpc } from "@/lib/trpc/trpc";
-// import { useQuery } from "@tanstack/react-query";
+"use client";
+import { trpc } from "@/lib/trpc/trpc";
 
-// export default function useGetWorkflow() {
-//   const workflow = trpc.workflow.getWorkflows.useQuery();
-//   return workflow;
-// }
+export default function useGetWorkflow() {
+  const [workflow] = trpc.workflow.getWorkflows.useSuspenseQuery();
+  return workflow;
+}
