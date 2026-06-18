@@ -9,7 +9,7 @@ export default function useCreateWorkflow() {
     trpc.workflow.createWorkflow.mutationOptions({
       onSuccess(data) {
         queryClient.invalidateQueries(
-          trpc.workflow.getWorkflows.queryOptions(),
+          trpc.workflow.getWorkflows.queryOptions({}),
         );
         toast.success(`workflow created successfully ${data.name}`);
       },

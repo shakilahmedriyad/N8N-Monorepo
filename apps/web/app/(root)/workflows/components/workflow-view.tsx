@@ -6,7 +6,7 @@ export default function WorkflowView() {
   const { data } = useSuspenseGetWorkflow();
   return (
     <div>
-      {data.items?.map((item) => (
+      {data?.items?.map((item) => (
         <p key={item.id}>{item.name}</p>
       ))}
     </div>

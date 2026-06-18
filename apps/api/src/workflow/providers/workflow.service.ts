@@ -36,7 +36,7 @@ export class WorkflowService {
     try {
       const currentPage = paginationDto.page;
 
-      const TotalCount = await this.databaseService.workflow.count({
+      const totalCount = await this.databaseService.workflow.count({
         where: {
           userId: session.user.id,
         },
@@ -46,7 +46,7 @@ export class WorkflowService {
         where: {
           userId: session.user.id,
           name: {
-            startsWith: paginationDto.search,
+            contains: paginationDto.search,
             mode: 'insensitive',
           },
         },
@@ -56,12 +56,11 @@ export class WorkflowService {
         skip: (currentPage - 1) * paginationDto.pageSize,
         take: paginationDto.pageSize,
       });
-      const totalPage = Math.ceil(TotalCount / items.length);
+      const totalPage = Math.ceil(totalCount / items.length);
       const nextPage = totalPage > currentPage ? currentPage + 1 : currentPage;
       const prevPage = currentPage > 0 ? currentPage - 1 : currentPage;
-
       return {
-        TotalCount,
+        totalCount,
         totalPage,
         currentPage,
         nextPage,

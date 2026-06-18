@@ -36,7 +36,6 @@ export class WorkflowRouter {
     @Input() paginationDto: PaginationDto,
     @Ctx() session: UserSession,
   ) {
-    console.log(paginationDto);
     return await this.workflowService.getWorkflows(paginationDto, session);
   }
 
