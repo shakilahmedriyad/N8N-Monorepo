@@ -7,7 +7,7 @@ export default function WorkflowView() {
   return (
     <div>
       {workflows?.map((item) => (
-        <p key={item.name}>{item.name}</p>
+        <p key={item.id}>{item.name}</p>
       ))}
     </div>
   );

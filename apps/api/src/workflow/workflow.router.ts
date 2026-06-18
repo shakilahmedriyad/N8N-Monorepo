@@ -44,12 +44,9 @@ export class WorkflowRouter {
   })
   public async createWorkflow(
     @Input() createWorkflowDto: CreateWorkflowDto,
-    @Session() session: UserSession,
+    @Ctx() ctx: UserSession,
   ) {
-    return await this.workflowService.createWorkflow(
-      createWorkflowDto,
-      session,
-    );
+    return await this.workflowService.createWorkflow(createWorkflowDto, ctx);
   }
 
   /**
@@ -63,11 +60,8 @@ export class WorkflowRouter {
     }),
     output: CreateWorkflowSchema,
   })
-  public async getWorkflowById(
-    @Input() id: string,
-    @Session() session: UserSession,
-  ) {
-    return await this.workflowService.getWorkflowById(id, session);
+  public async getWorkflowById(@Input() id: string, @Ctx() ctx: UserSession) {
+    return await this.workflowService.getWorkflowById(id, ctx);
   }
 
   /**
@@ -81,7 +75,7 @@ export class WorkflowRouter {
     }),
     output: WorkflowSchema,
   })
-  public async removeWorkflow(@Input() id, session: UserSession) {
-    return await this.workflowService.removeWorkflow(id, session);
+  public async removeWorkflow(@Input() id: string, @Ctx() ctx: UserSession) {
+    return await this.workflowService.removeWorkflow(id, ctx);
   }
 }
