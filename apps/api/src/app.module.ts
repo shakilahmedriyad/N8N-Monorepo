@@ -6,6 +6,7 @@ import { WorkflowModule } from './workflow/workflow.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@repo/auth/auth';
+import { TrpcContextProvider } from './common/context/trpc-context.provider';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -23,7 +24,9 @@ const ENV = process.env.NODE_ENV;
     /**
      * initialize Trpc
      **/
-    TRPCModule.forRoot({}),
+    TRPCModule.forRoot({
+      context: TrpcContextProvider,
+    }),
 
     /**
      * initialize Better auth for authentication
@@ -32,6 +35,6 @@ const ENV = process.env.NODE_ENV;
     AuthModule.forRoot({ auth }),
   ],
   controllers: [],
-  providers: [],
+  providers: [TrpcContextProvider],
 })
 export class AppModule {}

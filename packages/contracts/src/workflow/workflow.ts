@@ -1,8 +1,9 @@
 import * as z from "zod";
 
 export const WorkflowSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
+  userId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -40,9 +40,11 @@ export class WorkflowService {
           userId: session.user.id,
         },
       });
+      console.log(workflows);
       return workflows;
     } catch (error) {
-      throw new RequestTimeoutException('Could not create workflow');
+      console.log(error);
+      throw new RequestTimeoutException('Could not fetch workflows');
     }
   }
 

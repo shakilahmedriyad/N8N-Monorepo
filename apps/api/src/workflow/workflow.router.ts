@@ -1,7 +1,8 @@
-import { Input, Mutation, Query, Router } from 'nestjs-trpc';
+import { Ctx, Input, Mutation, Query, Router } from 'nestjs-trpc';
 import {
   type CreateWorkflowDto,
   CreateWorkflowSchema,
+  Workflow,
   WorkflowSchema,
 } from '@repo/contracts';
 import * as z from 'zod';
@@ -28,8 +29,8 @@ export class WorkflowRouter {
   @Query({
     output: z.array(WorkflowSchema),
   })
-  public async getWorkflows(@Session() session: UserSession) {
-    return await this.workflowService.getWorkflows(session);
+  public async getWorkflows(@Ctx() ctx: UserSession): Promise<Workflow[]> {
+    return await this.workflowService.getWorkflows(ctx);
   }
 
   /**

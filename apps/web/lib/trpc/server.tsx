@@ -7,16 +7,19 @@ import {
 import { headers } from "next/headers";
 import { cache } from "react";
 import { makeQueryClient } from "./query-client";
-import { appRouter } from "@repo/trpc";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
+import getSession from "../auth/get-session";
+import { appRouter } from "@repo/trpc";
 
 // IMPORTANT: Create a stable getter for the query client that
 //            will return the same client during the same request.
 export const getQueryClient = cache(makeQueryClient);
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  // const user = await auth(opts.headers);
-  return { userId: "user_123" };
+  return {
+    headers: opts.headers,
+  };
 };
 
 export const trpc = createTRPCOptionsProxy({
