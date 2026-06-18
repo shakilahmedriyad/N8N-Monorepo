@@ -1,8 +1,8 @@
+import NavigationHeader from "@/components/navigation-bar/Navigation-header";
 import NavigationBar from "@/components/navigation-bar/NavigationBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import getUser from "@/lib/auth/get-user";
 import requireAuth from "@/lib/auth/require-auth";
-import { auth } from "@repo/auth/auth";
 import { PropsWithChildren } from "react";
 
 export default async function RootLayout({ children }: PropsWithChildren) {
@@ -11,7 +11,10 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <SidebarProvider>
       <NavigationBar user={user} />
-      {children}
+      <div className="w-full flex flex-col">
+        <NavigationHeader />
+        {children}
+      </div>
     </SidebarProvider>
   );
 }

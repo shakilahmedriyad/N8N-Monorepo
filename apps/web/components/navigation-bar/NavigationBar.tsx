@@ -9,44 +9,67 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Activity, BlocksIcon, PencilIcon } from "lucide-react";
+import { BlocksIcon, DatabaseIcon, RocketIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserMenu } from "../user/user-menu";
+import Image from "next/image";
 
 export default function NavigationBar({ user }: { user: any }) {
   const pathname = usePathname();
-  const NavItem = [
+  const NavItems = [
     {
-      label: "Workflow",
-      url: "/workflow",
-      isActive: pathname.includes("/workflow"),
-      icon: <BlocksIcon size={18} />,
+      pathname: "/workflows",
+      label: "Workflows",
+      isActive: pathname === "/workflows",
+      icon: <BlocksIcon />,
     },
     {
-      label: "Execution",
-      url: "/execution",
-      isActive: pathname.includes("/execution"),
-      icon: <Activity size={18} />,
+      pathname: "/credentials",
+      label: "Credentials",
+      isActive: pathname === "/credentials",
+      icon: <DatabaseIcon />,
     },
     {
-      label: "Editor",
-      url: "/editor",
-      isActive: pathname.includes("/editor"),
-      icon: <PencilIcon size={18} />,
+      pathname: "/executions",
+      label: "Executions",
+      isActive: pathname === "/executions",
+      icon: <RocketIcon />,
     },
   ];
 
   return (
-    <Sidebar variant="floating">
-      <SidebarHeader />
+    <Sidebar>
+      <SidebarHeader>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Link href="/">
+                <SidebarMenuButton asChild>
+                  <div className="flex items-center gap-x-2">
+                    <Image
+                      src={"/logo/logo.svg"}
+                      alt="Automation studio"
+                      width={34}
+                      height={34}
+                    />
+                    <span className=" font-semibold font-heading">
+                      Automation Studio
+                    </span>
+                  </div>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarHeader>
       <SidebarContent className="flex flex-col justify-between">
         <SidebarGroup className="flex flex-col gap-y-2.5">
           <SidebarMenu>
-            {NavItem.map((item) => (
-              <SidebarMenuItem key={item.url}>
+            {NavItems.map((item) => (
+              <SidebarMenuItem key={item.pathname}>
                 <SidebarMenuButton asChild isActive={item.isActive}>
-                  <Link key={item.url} href={item.url} className="">
+                  <Link href={item.pathname} className="">
                     <p className="flex text-sm gap-x-3.5">
                       {item.icon} {item.label}
                     </p>
@@ -56,7 +79,9 @@ export default function NavigationBar({ user }: { user: any }) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup>{/* <UserMenu user={user} /> */}</SidebarGroup>
+        <SidebarGroup>
+          <UserMenu user={user} />
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

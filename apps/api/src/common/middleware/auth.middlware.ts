@@ -13,8 +13,6 @@ export class AuthMiddleware implements TRPCMiddleware {
   async use(opts: MiddlewareOptions): Promise<MiddlewareResponse> {
     const { ctx, next } = opts;
 
-    console.log(ctx);
-
     /// @ts-expect-error will fix later
     const session = ctx.session;
 
