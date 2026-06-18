@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@repo/auth/auth';
 import { TrpcContextProvider } from './common/context/trpc-context.provider';
+import { AuthMiddleware } from './common/middleware/auth.middlware';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -26,6 +27,7 @@ const ENV = process.env.NODE_ENV;
      **/
     TRPCModule.forRoot({
       context: TrpcContextProvider,
+      globalMiddlewares: [AuthMiddleware],
     }),
 
     /**
@@ -35,6 +37,6 @@ const ENV = process.env.NODE_ENV;
     AuthModule.forRoot({ auth }),
   ],
   controllers: [],
-  providers: [TrpcContextProvider],
+  providers: [TrpcContextProvider, AuthMiddleware],
 })
 export class AppModule {}

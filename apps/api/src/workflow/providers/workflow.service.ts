@@ -40,10 +40,8 @@ export class WorkflowService {
           userId: session.user.id,
         },
       });
-      console.log(workflows);
       return workflows;
     } catch (error) {
-      console.log(error);
       throw new RequestTimeoutException('Could not fetch workflows');
     }
   }

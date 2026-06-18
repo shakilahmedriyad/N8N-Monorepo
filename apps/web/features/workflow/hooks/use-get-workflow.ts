@@ -1,7 +1,7 @@
-import "client-only";
-import { trpc } from "@/lib/trpc/trpc";
+import { useTRPC } from "@/lib/trpc/trpc";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useSuspenseGetWorkflow() {
-  const [workflow] = trpc.workflow.getWorkflows.useSuspenseQuery();
-  return workflow;
+  const trpc = useTRPC();
+  return useQuery(trpc.workflow.getWorkflows.queryOptions());
 }

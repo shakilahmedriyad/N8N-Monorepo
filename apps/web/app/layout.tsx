@@ -4,7 +4,7 @@ import { Raleway, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import TrpcProvider from "@/providers/TrpcProvider";
+import { TRPCReactProvider } from "@/lib/trpc/trpc";
 
 const montserratHeading = Montserrat({
   subsets: ["latin"],
@@ -32,14 +32,14 @@ export default function RootLayout({
         montserratHeading.variable,
       )}
     >
-      <body>
-        <TrpcProvider>
+      <TRPCReactProvider>
+        <body>
           <TooltipProvider>
             {children}
             <Toaster />
           </TooltipProvider>
-        </TrpcProvider>
-      </body>
+        </body>
+      </TRPCReactProvider>
     </html>
   );
 }
