@@ -1,9 +1,5 @@
-import {
-  Injectable,
-  NotImplementedException,
-  RequestTimeoutException,
-} from '@nestjs/common';
-import { CreateWorkflowDto } from '@repo/contracts';
+import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { CreateWorkflowDto, PaginationDto } from '@repo/contracts';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
@@ -33,15 +29,47 @@ export class WorkflowService {
     }
   }
 
-  public async getWorkflows(session: UserSession) {
+  public async getWorkflows(
+    paginationDto: PaginationDto,
+    session: UserSession,
+  ) {
     try {
-      const workflows = await this.databaseService.workflow.findMany({
+      const currentPage = paginationDto.page;
+
+      const TotalCount = await this.databaseService.workflow.count({
         where: {
           userId: session.user.id,
         },
       });
-      return workflows;
+
+      const items = await this.databaseService.workflow.findMany({
+        where: {
+          userId: session.user.id,
+          name: {
+            startsWith: paginationDto.search,
+            mode: 'insensitive',
+          },
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+        skip: (currentPage - 1) * paginationDto.pageSize,
+        take: paginationDto.pageSize,
+      });
+      const totalPage = Math.ceil(TotalCount / items.length);
+      const nextPage = totalPage > currentPage ? currentPage + 1 : currentPage;
+      const prevPage = currentPage > 0 ? currentPage - 1 : currentPage;
+
+      return {
+        TotalCount,
+        totalPage,
+        currentPage,
+        nextPage,
+        prevPage,
+        items,
+      };
     } catch (error) {
+      console.log(error);
       throw new RequestTimeoutException('Could not fetch workflows');
     }
   }

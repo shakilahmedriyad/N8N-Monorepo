@@ -1,13 +1,15 @@
 import { Ctx, Input, Mutation, Query, Router } from 'nestjs-trpc';
 import {
+  createPaginationResponseSchema,
   type CreateWorkflowDto,
   CreateWorkflowSchema,
-  Workflow,
+  PAGINATION_SCHEMA,
+  type PaginationDto,
   WorkflowSchema,
 } from '@repo/contracts';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
-import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { type UserSession } from '@thallesp/nestjs-better-auth';
 
 /**
  * trpc router for workflows
@@ -27,10 +29,15 @@ export class WorkflowRouter {
    */
 
   @Query({
-    output: z.array(WorkflowSchema),
+    input: PAGINATION_SCHEMA,
+    output: createPaginationResponseSchema(WorkflowSchema),
   })
-  public async getWorkflows(@Ctx() ctx: UserSession): Promise<Workflow[]> {
-    return await this.workflowService.getWorkflows(ctx);
+  public async getWorkflows(
+    @Input() paginationDto: PaginationDto,
+    @Ctx() session: UserSession,
+  ) {
+    console.log(paginationDto);
+    return await this.workflowService.getWorkflows(paginationDto, session);
   }
 
   /**

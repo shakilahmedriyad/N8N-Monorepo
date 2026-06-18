@@ -13,7 +13,12 @@ import { z } from "zod";
 
 const t = initTRPC.create();
 const publicProcedure = t.procedure;
-import { WorkflowSchema, CreateWorkflowSchema } from "@repo/contracts";
+import {
+  PAGINATION_SCHEMA,
+  WorkflowSchema,
+  createPaginationResponseSchema,
+  CreateWorkflowSchema,
+} from "@repo/contracts";
 
 export const appRouter = t.router({
   user: t.router({
@@ -23,7 +28,8 @@ export const appRouter = t.router({
   }),
   workflow: t.router({
     getWorkflows: publicProcedure
-      .output(z.array(WorkflowSchema))
+      .input(PAGINATION_SCHEMA)
+      .output(createPaginationResponseSchema(WorkflowSchema))
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     createWorkflow: publicProcedure
       .input(CreateWorkflowSchema)
