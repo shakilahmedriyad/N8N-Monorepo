@@ -8,7 +8,7 @@ export const WorkflowParams = {
   pageSize: parseAsInteger
     .withDefault(PAGINATION.DEFAULT_PAGE_SIZE)
     .withOptions({ clearOnDefault: true }),
-  searc: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
+  search: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
 };
 
 export const loadWorkflowParams = createLoader(WorkflowParams);

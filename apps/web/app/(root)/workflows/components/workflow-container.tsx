@@ -1,13 +1,28 @@
 "use client";
 import EntityContainer from "@/components/entity/entity-container";
 import EntityHeader from "@/components/entity/entity-header";
-import { Input } from "@/components/ui/input";
+import EntityPaginationBar from "@/components/entity/entity-pagination";
+import EntitySearch from "@/components/entity/entity-search";
 import useCreateWorkflow from "@/features/workflow/hooks/use-create-workflow";
-import { Search } from "lucide-react";
+import useSuspenseGetWorkflow from "@/features/workflow/hooks/use-get-workflow";
+import { useWorkflowParams } from "@/features/workflow/hooks/use-workflow-params";
+import useEntitySearch from "@/hooks/use-entity-search";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 export default function WorkflowContainer({ children }: PropsWithChildren) {
+  return (
+    <EntityContainer
+      header={<WorkflowHeader />}
+      search={<WorkflowSearch />}
+      pagination={<WorkflowPaginationBar />}
+    >
+      {children}
+    </EntityContainer>
+  );
+}
+
+export const WorkflowHeader = () => {
   const router = useRouter();
   const createWorkflow = useCreateWorkflow();
   const handleCreateWorkflow = () => {
@@ -23,29 +38,36 @@ export default function WorkflowContainer({ children }: PropsWithChildren) {
     );
   };
   return (
-    <EntityContainer
-      header={
-        <EntityHeader
-          title="Workflow"
-          description="Manage your workflows"
-          buttonText="New Workflow"
-          onNew={handleCreateWorkflow}
-        />
-      }
-      search={
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search workflows..."
-            className="pl-10"
-            // value={searchQuery}
-            // onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      }
-    >
-      {children}
-    </EntityContainer>
+    <EntityHeader
+      title="Workflow"
+      description="Manage your workflows"
+      buttonText="New Workflow"
+      onNew={handleCreateWorkflow}
+    />
   );
-}
+};
+
+export const WorkflowSearch = () => {
+  const [params, setParams] = useWorkflowParams();
+  const { search, onSearchChange } = useEntitySearch({
+    params,
+    setParams,
+  });
+  return (
+    <EntitySearch
+      placeholder="Search workflows..."
+      searchQuery={search}
+      handleSearch={onSearchChange}
+    />
+  );
+};
+
+export const WorkflowPaginationBar = () => {
+  const { data } = useSuspenseGetWorkflow();
+  return (
+    <EntityPaginationBar
+      currentPage={data.currentPage}
+      totalPages={data.totalPage}
+    />
+  );
+};
