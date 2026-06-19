@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { MoreHorizontalIcon, MoreVertical, TrashIcon } from "lucide-react";
+import { MoreVertical, TrashIcon } from "lucide-react";
 import Link from "next/link";
 
 export type EntityItemProps = {

@@ -52,6 +52,7 @@ export default function NavigationBar({ user }: { user: any }) {
                       alt="Automation studio"
                       width={34}
                       height={34}
+                      loading="eager"
                     />
                     <span className=" font-semibold font-heading">
                       Automation Studio

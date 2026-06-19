@@ -11,10 +11,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <SidebarProvider>
       <NavigationBar user={user} />
-      <div className="w-full flex flex-col">
-        <NavigationHeader />
-        {children}
-      </div>
+      {children}
     </SidebarProvider>
   );
 }

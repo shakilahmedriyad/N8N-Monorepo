@@ -9,7 +9,7 @@ import useCreateWorkflow from "@/features/workflow/hooks/use-create-workflow";
 import useSuspenseGetWorkflow from "@/features/workflow/hooks/use-get-workflow";
 import { useWorkflowParams } from "@/features/workflow/hooks/use-workflow-params";
 import useEntitySearch from "@/hooks/use-entity-search";
-import { Workflow } from "@repo/contracts";
+import { type Workflow } from "@repo/contracts";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 import { formatDistanceToNow } from "date-fns";
