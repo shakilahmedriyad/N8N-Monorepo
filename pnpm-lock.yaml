@@ -162,6 +162,9 @@ importers:
       '@repo/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@repo/trpc':
         specifier: workspace:*
         version: link:../../packages/trpc

@@ -8,10 +8,17 @@ import requireAuth from "@/lib/auth/require-auth";
 import WorkflowContainer from "./components/workflow-container";
 import Loading from "@/components/loaders/loading";
 import Error from "@/components/errors/error";
+import { loadWorkflowParams } from "@/features/workflow/params";
 
-export default async function workflow() {
+import type { SearchParams } from "nuqs/server";
+type PageProps = {
+  searchParams: Promise<SearchParams>;
+};
+
+export default async function workflow({ searchParams }: PageProps) {
   await requireAuth();
-  prefetchWorkflows();
+  const params = await loadWorkflowParams(searchParams);
+  prefetchWorkflows(params);
 
   return (
     <WorkflowContainer>

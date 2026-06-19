@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/trpc";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const montserratHeading = Montserrat({
   subsets: ["latin"],
@@ -32,14 +33,16 @@ export default function RootLayout({
         montserratHeading.variable,
       )}
     >
-      <TRPCReactProvider>
-        <body>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-          </TooltipProvider>
-        </body>
-      </TRPCReactProvider>
+      <NuqsAdapter>
+        <TRPCReactProvider>
+          <body>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
+          </body>
+        </TRPCReactProvider>
+      </NuqsAdapter>
     </html>
   );
 }

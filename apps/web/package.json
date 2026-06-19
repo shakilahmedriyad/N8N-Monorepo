@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@repo/auth": "workspace:*",
     "@repo/trpc": "workspace:*",
+    "@repo/contracts": "workspace:*",
     "@tailwindcss/postcss": "^4.3.0",
     "@tanstack/react-query": "^5.101.0",
     "@trpc/client": "^11.17.0",
