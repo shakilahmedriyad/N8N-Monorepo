@@ -72,7 +72,7 @@ export default function SignUpForm() {
       if (result.error) {
         setError(result.error.message || "Failed to create account");
       } else {
-        router.push("/workflow");
+        router.push("/workflows");
       }
     } catch (err) {
       setError("An unexpected error occurred");

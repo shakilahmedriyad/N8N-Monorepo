@@ -61,7 +61,7 @@ export default function SignInForm() {
       if (result.error) {
         setError(result.error.message || "Failed to sign in");
       } else {
-        router.push("/workflow");
+        router.push("/workflows");
       }
     } catch (err) {
       setError("An unexpected error occurred");
