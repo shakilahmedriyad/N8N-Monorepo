@@ -8,7 +8,7 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@repo/auth/auth';
 import { TrpcContextProvider } from './common/context/trpc-context.provider';
 import { AuthMiddleware } from './common/middleware/auth.middlware';
-
+import superjson from 'superjson';
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
@@ -26,6 +26,7 @@ const ENV = process.env.NODE_ENV;
      * initialize Trpc
      **/
     TRPCModule.forRoot({
+      transformer: superjson,
       context: TrpcContextProvider,
       globalMiddlewares: [AuthMiddleware],
     }),

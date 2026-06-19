@@ -1,14 +1,9 @@
 "use client";
 
 import useSuspenseGetWorkflow from "@/features/workflow/hooks/use-get-workflow";
+import { WorkflowList } from "./workflow-container";
 
 export default function WorkflowView() {
   const { data } = useSuspenseGetWorkflow();
-  return (
-    <div>
-      {data?.items?.map((item) => (
-        <p key={item.id}>{item.name}</p>
-      ))}
-    </div>
-  );
+  return <WorkflowList workflows={data.items} />;
 }
