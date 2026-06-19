@@ -45,7 +45,7 @@ export function TRPCReactProvider(
         httpBatchLink({
           // transformer: superjson, <-- if you use a data transformer
           url: process.env.NEXT_PUBLIC_API_URL!,
-          fetch(url, options) {
+          async fetch(url, options) {
             return fetch(url, {
               ...options,
               credentials: "include",
@@ -55,6 +55,7 @@ export function TRPCReactProvider(
       ],
     }),
   );
+
   return (
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>

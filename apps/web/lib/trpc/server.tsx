@@ -9,7 +9,6 @@ import { cache } from "react";
 import { makeQueryClient } from "./query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import getSession from "../auth/get-session";
 import { appRouter } from "@repo/trpc";
 
 // IMPORTANT: Create a stable getter for the query client that
