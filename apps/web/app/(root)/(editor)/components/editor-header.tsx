@@ -10,10 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSuspenseWorkflowbyId } from "@/features/editor/hooks/use-get-workflow-by-id";
+import useWorkflowUpdate from "@/features/editor/hooks/use-update-workflow";
 import { Workflow } from "@repo/contracts";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import {
+  InputHTMLAttributes,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function EditorHeader({ workflowId }: { workflowId: string }) {
   return (
@@ -52,10 +59,19 @@ export function EditorBreadCrumb({ workflowId }: { workflowId: string }) {
 
 export function EditorWorkflowName({ workflowId }: { workflowId: string }) {
   const [isEditing, setEditing] = useState(false);
-  const { data: workflow } = useSuspenseWorkflowbyId(workflowId);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { data: workflow, isLoading } = useSuspenseWorkflowbyId(workflowId);
+  const handleEditing = () => {
+    setEditing(true);
+  };
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
   return (
     <div>
-      <BreadcrumbItem onClick={() => setEditing(true)}>
+      <BreadcrumbItem aria-disabled={isLoading} onClick={handleEditing}>
         {!isEditing && (
           <div className="cursor-pointer hover:text-accent-foreground transition-colors">
             {workflow.name}
@@ -65,6 +81,8 @@ export function EditorWorkflowName({ workflowId }: { workflowId: string }) {
           <EditorWorkflowNameInput
             setEditing={setEditing}
             workflow={workflow}
+            ref={inputRef}
+            isLoading={isLoading}
           />
         )}
       </BreadcrumbItem>
@@ -75,16 +93,40 @@ export function EditorWorkflowName({ workflowId }: { workflowId: string }) {
 export function EditorWorkflowNameInput({
   workflow,
   setEditing,
+  ref,
+  isLoading,
 }: {
+  ref: RefObject<HTMLInputElement | null>;
   workflow: Workflow;
+  isLoading: boolean;
   setEditing: (val: boolean) => void;
 }) {
   const [workflowName, setWorkflowName] = useState(workflow.name);
+  const updateWorkflow = useWorkflowUpdate(workflow.id);
+
+  const handleUpdate = () => {
+    setEditing(false);
+    updateWorkflow.mutate({
+      workflowId: workflow.id,
+      workflow: {
+        name: workflowName,
+      },
+    });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == "Enter") handleUpdate();
+    if (e.key == "Escape") setEditing(false);
+  };
 
   return (
     <Input
+      ref={ref}
+      disabled={isLoading}
       className="text-accent-foreground"
       value={workflowName}
+      onBlur={handleUpdate}
+      onKeyDown={handleKeyDown}
       onChange={(e) => setWorkflowName(e.target.value)}
     />
   );

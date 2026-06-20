@@ -1,10 +1,10 @@
 import { useTRPC } from "@/lib/trpc/trpc";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export default function useWorkflowUpdate(workflowId: string) {
   const trpc = useTRPC();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   return useMutation(
     trpc.workflow.updateWorkflow.mutationOptions({
       onSuccess(data) {

@@ -76,7 +76,6 @@ export class WorkflowService {
         items,
       };
     } catch (error) {
-      console.log(error);
       throw new RequestTimeoutException('Could not fetch workflows');
     }
   }
