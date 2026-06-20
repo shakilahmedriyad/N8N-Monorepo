@@ -4,6 +4,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import EditorView from "../../components/editor-view";
 import EditorHeader from "../../components/editor-header";
 import { prefetchWorkflowById } from "@/features/editor/server/prefetch";
+import EditorLoading from "../../components/editor-loading";
+import EditorError from "../../components/editor-error";
 
 interface PageProps {
   params: Promise<{ workflowId: string }>;
@@ -14,8 +16,8 @@ export default async function WorkflowPage({ params }: PageProps) {
   prefetchWorkflowById(param);
   return (
     <HydrateClient>
-      <ErrorBoundary fallback={<div>Error ...</div>}>
-        <Suspense fallback={<div>Loading ...</div>}>
+      <ErrorBoundary fallback={<EditorError />}>
+        <Suspense fallback={<EditorLoading />}>
           <div className="flex flex-col w-full">
             <EditorHeader workflowId={param.workflowId} />
             <EditorView workflowId={param.workflowId} />
