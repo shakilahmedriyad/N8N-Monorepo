@@ -18,7 +18,9 @@ import {
   PAGINATION_SCHEMA,
   WorkflowSchema,
   createPaginationResponseSchema,
+  GetWorkflowByIdSchema,
   CreateWorkflowSchema,
+  UpdateWorkflowSchema,
 } from "@repo/contracts";
 
 export const appRouter = t.router({
@@ -32,18 +34,18 @@ export const appRouter = t.router({
       .input(PAGINATION_SCHEMA)
       .output(createPaginationResponseSchema(WorkflowSchema))
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    getWorkflowById: publicProcedure
+      .input(GetWorkflowByIdSchema)
+      .output(WorkflowSchema)
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     createWorkflow: publicProcedure
       .input(CreateWorkflowSchema)
       .output(CreateWorkflowSchema)
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
-    getWorkflowById: publicProcedure
-      .input(
-        z.object({
-          id: z.string(),
-        }),
-      )
-      .output(CreateWorkflowSchema)
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    updateWorkflow: publicProcedure
+      .input(UpdateWorkflowSchema)
+      .output(WorkflowSchema)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     removeWorkflow: publicProcedure
       .input(
         z.object({

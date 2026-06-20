@@ -31,7 +31,7 @@ export default function EntityItem({
   onRemove,
 }: EntityItemProps) {
   return (
-    <Link href={href}>
+    <Link href={href} prefetch>
       <Card className="my-3 shadow">
         <CardContent className="flex">
           <div className="flex items-start gap-x-5">

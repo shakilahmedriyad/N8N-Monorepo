@@ -1,5 +1,9 @@
 import { Injectable, RequestTimeoutException } from '@nestjs/common';
-import { CreateWorkflowDto, PaginationDto } from '@repo/contracts';
+import {
+  CreateWorkflowDto,
+  PaginationDto,
+  UpdateWorkflowDto,
+} from '@repo/contracts';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
@@ -77,17 +81,37 @@ export class WorkflowService {
     }
   }
 
-  public async getWorkflowById(id: string, session: UserSession) {
+  public async getWorkflowById(workflowId: string, session: UserSession) {
     try {
-      const workflow = await this.databaseService.workflow.findMany({
+      const workflow = await this.databaseService.workflow.findFirstOrThrow({
         where: {
-          id,
+          id: workflowId,
           userId: session.user.id,
         },
       });
       return workflow;
     } catch (error) {
-      throw new RequestTimeoutException('Could not create workflow');
+      throw new RequestTimeoutException(`Could not fetch workflow ${error}`);
+    }
+  }
+
+  public async updateWorkflow(
+    updateWorkflowDto: UpdateWorkflowDto,
+    session: UserSession,
+  ) {
+    try {
+      const workflow = await this.databaseService.workflow.update({
+        where: {
+          id: updateWorkflowDto.workflowId,
+          userId: session.user.id,
+        },
+        data: {
+          ...updateWorkflowDto.workflow,
+        },
+      });
+      return workflow;
+    } catch (error) {
+      throw new RequestTimeoutException(`Could not fetch workflow ${error}`);
     }
   }
 

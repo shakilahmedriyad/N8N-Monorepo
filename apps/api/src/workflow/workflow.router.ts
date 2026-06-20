@@ -1,11 +1,18 @@
 import { Ctx, Input, Mutation, Query, Router } from 'nestjs-trpc';
 import {
   createPaginationResponseSchema,
-  type CreateWorkflowDto,
   CreateWorkflowSchema,
+  GetWorkflowByIdSchema,
   PAGINATION_SCHEMA,
-  type PaginationDto,
+  UpdateWorkflowSchema,
   WorkflowSchema,
+} from '@repo/contracts';
+
+import {
+  type CreateWorkflowDto,
+  type GetWorkflowByIdDto,
+  type PaginationDto,
+  type UpdateWorkflowDto,
 } from '@repo/contracts';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
@@ -41,6 +48,25 @@ export class WorkflowRouter {
 
   /**
    *
+   * route for getting workflow by id
+   */
+
+  @Query({
+    input: GetWorkflowByIdSchema,
+    output: WorkflowSchema,
+  })
+  public async getWorkflowById(
+    @Input() getWorkflowByIdDto: GetWorkflowByIdDto,
+    @Ctx() ctx: UserSession,
+  ) {
+    return await this.workflowService.getWorkflowById(
+      getWorkflowByIdDto.workflowId,
+      ctx,
+    );
+  }
+
+  /**
+   *
    * route for creating workflows
    */
 
@@ -57,17 +83,18 @@ export class WorkflowRouter {
 
   /**
    *
-   * route for getting workflow by id
+   * route for updating workflows
    */
 
-  @Query({
-    input: z.object({
-      id: z.string(),
-    }),
-    output: CreateWorkflowSchema,
+  @Mutation({
+    input: UpdateWorkflowSchema,
+    output: WorkflowSchema,
   })
-  public async getWorkflowById(@Input() id: string, @Ctx() ctx: UserSession) {
-    return await this.workflowService.getWorkflowById(id, ctx);
+  public async updateWorkflow(
+    @Input() updateWorkflowDto: UpdateWorkflowDto,
+    @Ctx() ctx: UserSession,
+  ) {
+    return await this.workflowService.updateWorkflow(updateWorkflowDto, ctx);
   }
 
   /**
