@@ -14,13 +14,7 @@ import useWorkflowUpdate from "@/features/editor/hooks/use-update-workflow";
 import { Workflow } from "@repo/contracts";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
-import {
-  InputHTMLAttributes,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 export default function EditorHeader({ workflowId }: { workflowId: string }) {
   return (
@@ -106,6 +100,9 @@ export function EditorWorkflowNameInput({
 
   const handleUpdate = () => {
     setEditing(false);
+    if (workflowName == workflow.name) {
+      return;
+    }
     updateWorkflow.mutate({
       workflowId: workflow.id,
       workflow: {

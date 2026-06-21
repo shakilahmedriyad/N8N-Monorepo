@@ -16,7 +16,7 @@ export default function EntityLists<T>({
   classNames,
 }: entityListsProps<T>) {
   if (items.length == 0 && emptyView) {
-    return <div>{emptyView}</div>;
+    return <div className="w-full h-full">{emptyView}</div>;
   }
   return (
     <div>

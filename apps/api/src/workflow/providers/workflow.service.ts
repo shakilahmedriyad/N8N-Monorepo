@@ -4,6 +4,7 @@ import {
   PaginationDto,
   UpdateWorkflowDto,
 } from '@repo/contracts';
+import type { Connection, Edge, Node, XYPosition } from '@xyflow/react';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
@@ -20,12 +21,21 @@ export class WorkflowService {
    *creating new workflow
    */
   public async createWorkflow(
-    createWorkflow: CreateWorkflowDto,
+    createWorkflowDto: CreateWorkflowDto,
     session: UserSession,
   ) {
     try {
       const workflow = await this.databaseService.workflow.create({
-        data: { ...createWorkflow, userId: session.user.id },
+        data: {
+          ...createWorkflowDto,
+          userId: session.user.id,
+          nodes: {
+            create: {
+              name: 'Initial',
+              position: { x: 0, y: 0 },
+            },
+          },
+        },
       });
       return workflow;
     } catch (error) {
@@ -87,7 +97,23 @@ export class WorkflowService {
           id: workflowId,
           userId: session.user.id,
         },
+        include: {
+          connections: true,
+          nodes: true,
+        },
       });
+      const nodes: Node[] = workflow.nodes.map((node) => ({
+        id: node.id,
+        data: node.data as Record<string, unknown>,
+        position: node.position as XYPosition,
+      }));
+
+      const connections: Edge[] = workflow.connections.map((connection) => ({
+        id: connection.id,
+        source: connection.sourceId,
+        target: connection.targetId,
+      }));
+
       return workflow;
     } catch (error) {
       throw new RequestTimeoutException(`Could not fetch workflow ${error}`);

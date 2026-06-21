@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { WorkflowIcon } from "lucide-react";
+import EntityEmptyView from "@/components/entity/entity-empty-view";
+import { toast } from "sonner";
 
 export default function WorkflowContainer({ children }: PropsWithChildren) {
   return (
@@ -77,10 +79,38 @@ export const WorkflowPaginationBar = () => {
   );
 };
 
+export const WorkflowEmptyView = () => {
+  const createWorkflow = useCreateWorkflow();
+  const handleCreateWorkflow = () => {
+    createWorkflow.mutate(
+      {
+        name: "Workflow",
+      },
+      {
+        onError(error) {
+          toast.error(error.message);
+        },
+        onSuccess(data) {
+          toast.success(`${data.name} created successfully`);
+        },
+      },
+    );
+  };
+  return (
+    <EntityEmptyView
+      title="No workflows yet"
+      description="Get started by creating your first automation workflow"
+      actionLabel="Create Workflow"
+      onAction={handleCreateWorkflow}
+    />
+  );
+};
+
 export const WorkflowList = ({ workflows }: { workflows: Workflow[] }) => {
   return (
     <EntityLists
       items={workflows}
+      emptyView={<WorkflowEmptyView />}
       renderItem={(item, index) => (
         <EntityItem
           href={`workflows/${item.id}`}

@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -24,7 +24,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  workflow      workflow[]
+  workflow Workflow[]
 
   @@unique([email])
   @@map("user")
@@ -78,13 +78,44 @@ model Verification {
   @@map("verification")
 }
 
+model Workflow {
+  id          String       @id @default(cuid())
+  name        String
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nodes       Node[]
+  connections Connection[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
 
+enum NodeType {
+  INITIAL
+}
 
-model workflow {
-  id        String   @id @default(cuid())
-  name      String
-  userId    String
-  user      User @relation(fields: [userId] , references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Node {
+  id         String       @id @default(cuid())
+  name       String
+  type       NodeType     @default(INITIAL)
+  workflowId String
+  workflow   Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  From       Connection[] @relation("From")
+  To         Connection[] @relation("To")
+  position   Json
+  data       Json         @default("{}")
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Connection {
+  id         String   @id @default(cuid())
+  name       String
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  sourceId   String
+  source     Node     @relation("From", fields: [sourceId], references: [id], onDelete: Cascade)
+  targetId   String
+  target     Node     @relation("To", fields: [targetId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

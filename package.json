@@ -21,6 +21,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@xyflow/react": "^12.11.0",
     "superjson": "^2.2.6"
   }
 }
