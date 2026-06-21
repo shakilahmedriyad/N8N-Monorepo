@@ -32,10 +32,12 @@ const initialNodes = [
 const initialEdges = [{ id: "n1-n2", source: "n1", target: "n2" }];
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
-  const { data: workflow } = useSuspenseWorkflowbyId(workflowId);
+  const { data } = useSuspenseWorkflowbyId(workflowId);
+  console.log(data);
+  const [nodes, setNodes] = useState<Node[]>(data.nodes);
+  const [edges, setEdges] = useState<Edge[]>(data.connections);
 
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  console.log(data);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>

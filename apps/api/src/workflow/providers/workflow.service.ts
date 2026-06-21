@@ -92,7 +92,7 @@ export class WorkflowService {
 
   public async getWorkflowById(workflowId: string, session: UserSession) {
     try {
-      const workflow = await this.databaseService.workflow.findFirstOrThrow({
+      const result = await this.databaseService.workflow.findFirstOrThrow({
         where: {
           id: workflowId,
           userId: session.user.id,
@@ -102,19 +102,25 @@ export class WorkflowService {
           nodes: true,
         },
       });
-      const nodes: Node[] = workflow.nodes.map((node) => ({
+      const {
+        nodes: workflowNodes,
+        connections: workflowConnection,
+        ...workflow
+      } = result;
+
+      const nodes: Node[] = workflowNodes.map((node) => ({
         id: node.id,
         data: node.data as Record<string, unknown>,
         position: node.position as XYPosition,
       }));
 
-      const connections: Edge[] = workflow.connections.map((connection) => ({
+      const connections: Edge[] = workflowConnection.map((connection) => ({
         id: connection.id,
         source: connection.sourceId,
         target: connection.targetId,
       }));
 
-      return workflow;
+      return { workflow, nodes, connections };
     } catch (error) {
       throw new RequestTimeoutException(`Could not fetch workflow ${error}`);
     }

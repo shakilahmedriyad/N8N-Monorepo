@@ -2,6 +2,7 @@ import { Ctx, Input, Mutation, Query, Router } from 'nestjs-trpc';
 import {
   createPaginationResponseSchema,
   CreateWorkflowSchema,
+  GetWorkflowByIdOutputSchema,
   GetWorkflowByIdSchema,
   PAGINATION_SCHEMA,
   UpdateWorkflowSchema,
@@ -53,7 +54,7 @@ export class WorkflowRouter {
 
   @Query({
     input: GetWorkflowByIdSchema,
-    output: WorkflowSchema,
+    output: GetWorkflowByIdOutputSchema,
   })
   public async getWorkflowById(
     @Input() getWorkflowByIdDto: GetWorkflowByIdDto,
