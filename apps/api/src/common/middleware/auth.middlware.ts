@@ -15,7 +15,6 @@ export class AuthMiddleware implements TRPCMiddleware {
 
     /// @ts-expect-error will fix later
     const session = ctx.session;
-    console.log(session);
     if (session == null) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',

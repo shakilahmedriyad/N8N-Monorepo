@@ -20,7 +20,6 @@ import "@xyflow/react/dist/style.css";
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
   const { data } = useSuspenseWorkflowbyId(workflowId);
-  console.log(data);
   const [nodes, setNodes] = useState<Node[]>(data.nodes);
   const [edges, setEdges] = useState<Edge[]>(data.connections);
 
