@@ -118,4 +118,6 @@ model Connection {
   target     Node     @relation("To", fields: [targetId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@unique([sourceId, targetId])
 }

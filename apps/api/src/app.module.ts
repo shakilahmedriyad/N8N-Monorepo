@@ -26,6 +26,7 @@ const ENV = process.env.NODE_ENV;
      * initialize Trpc
      **/
     TRPCModule.forRoot({
+      basePath: '/api/trpc',
       transformer: superjson,
       context: TrpcContextProvider,
       globalMiddlewares: [AuthMiddleware],

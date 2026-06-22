@@ -54,7 +54,7 @@ export function EditorBreadCrumb({ workflowId }: { workflowId: string }) {
 export function EditorWorkflowName({ workflowId }: { workflowId: string }) {
   const [isEditing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data: workflow, isLoading } = useSuspenseWorkflowbyId(workflowId);
+  const { data, isLoading } = useSuspenseWorkflowbyId(workflowId);
   const handleEditing = () => {
     setEditing(true);
   };
@@ -68,13 +68,13 @@ export function EditorWorkflowName({ workflowId }: { workflowId: string }) {
       <BreadcrumbItem aria-disabled={isLoading} onClick={handleEditing}>
         {!isEditing && (
           <div className="cursor-pointer hover:text-accent-foreground transition-colors">
-            {workflow.name}
+            {data.workflow.name}
           </div>
         )}
         {isEditing && (
           <EditorWorkflowNameInput
             setEditing={setEditing}
-            workflow={workflow}
+            workflow={data.workflow}
             ref={inputRef}
             isLoading={isLoading}
           />

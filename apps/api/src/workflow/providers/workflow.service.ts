@@ -110,6 +110,7 @@ export class WorkflowService {
 
       const nodes: Node[] = workflowNodes.map((node) => ({
         id: node.id,
+        type: node.type,
         data: node.data as Record<string, unknown>,
         position: node.position as XYPosition,
       }));

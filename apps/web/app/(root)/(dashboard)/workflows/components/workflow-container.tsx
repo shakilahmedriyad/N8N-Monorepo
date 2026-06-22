@@ -73,8 +73,8 @@ export const WorkflowPaginationBar = () => {
   const { data } = useSuspenseGetWorkflow();
   return (
     <EntityPaginationBar
-      currentPage={data.currentPage}
-      totalPages={data.totalPage}
+      currentPage={data?.currentPage || 0}
+      totalPages={data?.totalPage || 0}
     />
   );
 };
