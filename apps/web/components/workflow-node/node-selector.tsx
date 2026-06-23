@@ -1,5 +1,10 @@
 import Image from "next/image";
-import { isValidElement, PropsWithChildren, ReactNode } from "react";
+import {
+  isValidElement,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+} from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,8 +15,11 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { NodeType } from "@repo/contracts";
-import { Globe2Icon, MousePointer2Icon } from "lucide-react";
+import { GlobeIcon, MousePointer2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Node, useNodes, useReactFlow } from "@xyflow/react";
+import { toast } from "sonner";
+import { createId } from "@paralleldrive/cuid2";
 
 type NodeTypes = {
   type: NodeType;
@@ -30,15 +38,57 @@ const triggerNodes: NodeTypes[] = [
   {
     label: "HTTP Trigger",
     description: "Start this workflow via HTTP request",
-    icons: <Globe2Icon className="h-5 w-5" />,
+    icons: <GlobeIcon className="h-5 w-5" />,
     type: NodeType.HTTP_TRIGGER,
   },
 ];
 
-export default function NodeSelector({ children }: PropsWithChildren) {
+export default function NodeSelector({
+  children,
+  asChild = false,
+}: {
+  children: ReactNode;
+  asChild: boolean;
+}) {
+  const { setNodes, screenToFlowPosition } = useReactFlow();
+  const nodes = useNodes();
+
+  const handleNodeCreate = useCallback((type: NodeType) => {
+    if (nodes.some((node) => node.type == type)) {
+      toast.error(
+        `this ${type} node already exist. try creating other types node`,
+      );
+      return;
+    }
+
+    const base = screenToFlowPosition({
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+    });
+
+    const position = {
+      x: base.x + (Math.random() - 0.5) * 120,
+      y: base.y + (Math.random() - 0.5) * 120,
+    };
+
+    const newNode: Node = {
+      id: createId(),
+      data: {},
+      position,
+      type: NodeType.HTTP_TRIGGER,
+    };
+
+    if (nodes.some((node) => node.type == NodeType.INITIAL)) {
+      setNodes([newNode]);
+      return;
+    }
+
+    setNodes((prevNode) => [...prevNode, newNode]);
+  }, []);
+
   return (
     <Sheet>
-      <SheetTrigger>{children}</SheetTrigger>
+      <SheetTrigger asChild={asChild}>{children}</SheetTrigger>
       <SheetContent side="right" className="sm:max-w-sm">
         <SheetHeader>
           <SheetTitle className="text-xl">
@@ -52,6 +102,7 @@ export default function NodeSelector({ children }: PropsWithChildren) {
           {triggerNodes.map((item, index) => (
             <div key={item.type}>
               <Button
+                onClick={() => handleNodeCreate(item.type)}
                 variant="ghost"
                 className="w-full my-2 h-auto p-4 justify-start items-start hover:bg-accent"
               >

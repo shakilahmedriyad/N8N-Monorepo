@@ -12,11 +12,15 @@ import {
   type Connection,
   Background,
   Controls,
+  Panel,
 } from "@xyflow/react";
-import { nodeComponents, RegisterNodes } from "@/config/react-flow";
+import { nodeComponents } from "@/config/react-flow";
 
 import { useSuspenseWorkflowbyId } from "@/features/editor/hooks/use-get-workflow-by-id";
 import "@xyflow/react/dist/style.css";
+import { PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import NodeSelector from "@/components/workflow-node/node-selector";
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
   const { data } = useSuspenseWorkflowbyId(workflowId);
@@ -51,7 +55,14 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
         fitView
       >
         <Controls />
-        <Background bgColor="" />
+        <Background />
+        <Panel position={"top-right"}>
+          <NodeSelector asChild>
+            <Button variant={"secondary"}>
+              <PlusIcon />
+            </Button>
+          </NodeSelector>
+        </Panel>
       </ReactFlow>
     </div>
   );

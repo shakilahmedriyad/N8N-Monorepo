@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
+    "@paralleldrive/cuid2": "^3.3.0",
     "@repo/auth": "workspace:*",
     "@repo/contracts": "workspace:*",
     "@repo/database": "workspace:*",
