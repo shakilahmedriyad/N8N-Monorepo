@@ -16,7 +16,7 @@ export function PlaceholderNode({
 }: PlaceholderNodeProps) {
   return (
     <BaseNode
-      className="bg-card w-full h-full border-dashed border-gray-400 p-2 text-center text-gray-400 shadow-none"
+      className="bg-card w-fit h-fit border-dashed border-gray-400 p-2 text-center text-gray-400 shadow-none"
       onClick={handleClick}
     >
       {children}

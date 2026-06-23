@@ -10,6 +10,10 @@ export default function useWorkflowUpdate(workflowId: string) {
       onSuccess(data) {
         toast.success(`${data.name} updated successfully`);
         queryClient.invalidateQueries(
+          trpc.workflow.getWorkflows.queryOptions({}),
+        );
+
+        queryClient.invalidateQueries(
           trpc.workflow.getWorkflowById.queryOptions({ workflowId }),
         );
       },
