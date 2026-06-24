@@ -20,9 +20,10 @@ export default function WorkflowNode({
   onDelete,
   children,
 }: WorkflowNodeProps) {
+  
   return (
     <div className="flex flex-col justify-center items-center cursor-pointer">
-      <NodeToolbar hidden={hideToolbar} position={Position.Top} align="end">
+      <NodeToolbar hidden={hideToolbar} position={Position.Top}>
         <div className="flex">
           <Button onClick={onUpdate} variant={"ghost"} size={"icon-sm"}>
             <Settings2Icon className="size-4" />
