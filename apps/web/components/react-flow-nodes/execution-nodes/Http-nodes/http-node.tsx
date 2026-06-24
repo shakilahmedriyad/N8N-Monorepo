@@ -1,6 +1,6 @@
 "use client";
 import { Node, NodeProps } from "@xyflow/react";
-import { GlobeIcon, PlusIcon } from "lucide-react";
+import { GlobeIcon } from "lucide-react";
 import { memo } from "react";
 import BaseExecutionNode from "../Base-execution-node/base-execution-node";
 

@@ -120,13 +120,16 @@ export class WorkflowRouter {
    * route for removing workflow
    */
 
-  @Query({
+  @Mutation({
     input: z.object({
       id: z.string(),
     }),
     output: WorkflowSchema,
   })
-  public async removeWorkflow(@Input() id: string, @Ctx() ctx: UserSession) {
-    return await this.workflowService.removeWorkflow(id, ctx);
+  public async removeWorkflow(
+    @Input() deleteWorkflowDto: { id: string },
+    @Ctx() ctx: UserSession,
+  ) {
+    return await this.workflowService.removeWorkflow(deleteWorkflowDto, ctx);
   }
 }

@@ -10,17 +10,19 @@ import { MoreVertical, TrashIcon } from "lucide-react";
 import Link from "next/link";
 
 export type EntityItemProps = {
+  id: string;
   href: string;
   title: string;
   subtitle?: React.ReactNode;
   image?: React.ReactNode;
   actions?: React.ReactNode;
-  onRemove?: () => void | Promise<void>;
+  onRemove?: (id: string) => void | Promise<void>;
   isRemoving?: boolean;
   className?: string;
 };
 
 export default function EntityItem({
+  id,
   title,
   href,
   subtitle,
@@ -60,7 +62,10 @@ export default function EntityItem({
                   <DropdownMenuContent>
                     <DropdownMenuItem
                       disabled={isRemoving}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemove(id);
+                      }}
                     >
                       <TrashIcon />
                       Delete

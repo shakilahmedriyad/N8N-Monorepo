@@ -16,8 +16,8 @@ const t = initTRPC.create({ transformer: superjson });
 const publicProcedure = t.procedure;
 import {
   PAGINATION_SCHEMA,
-  WorkflowSchema,
   createPaginationResponseSchema,
+  WorkflowSchema,
   GetWorkflowByIdSchema,
   GetWorkflowByIdOutputSchema,
   CreateWorkflowSchema,
@@ -59,7 +59,7 @@ export const appRouter = t.router({
         }),
       )
       .output(WorkflowSchema)
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
   }),
 });
 

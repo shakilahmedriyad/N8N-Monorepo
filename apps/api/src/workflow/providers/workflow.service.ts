@@ -99,11 +99,14 @@ export class WorkflowService {
     }
   }
 
-  public async removeWorkflow(id: string, session: UserSession) {
+  public async removeWorkflow(
+    deleteWorkflowDto: { id: string },
+    session: UserSession,
+  ) {
     try {
       const workflow = this.databaseService.workflow.delete({
         where: {
-          id,
+          id: deleteWorkflowDto.id,
           userId: session.user.id,
         },
       });

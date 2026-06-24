@@ -11,11 +11,12 @@ import { useWorkflowParams } from "@/features/workflow/hooks/use-workflow-params
 import useEntitySearch from "@/hooks/use-entity-search";
 import { type Workflow } from "@repo/contracts";
 import { useRouter } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { WorkflowIcon } from "lucide-react";
 import EntityEmptyView from "@/components/entity/entity-empty-view";
 import { toast } from "sonner";
+import useDeleteWorkflow from "@/features/workflow/hooks/use-delete-workflow";
 
 export default function WorkflowContainer({ children }: PropsWithChildren) {
   return (
@@ -107,12 +108,18 @@ export const WorkflowEmptyView = () => {
 };
 
 export const WorkflowList = ({ workflows }: { workflows: Workflow[] }) => {
+  const deleteWorkflow = useDeleteWorkflow();
+  const handleDelete = useCallback((id: string) => {
+    deleteWorkflow.mutate({ id });
+  }, []);
   return (
     <EntityLists
       items={workflows}
       emptyView={<WorkflowEmptyView />}
-      renderItem={(item, index) => (
+      renderItem={(item) => (
         <EntityItem
+          id={item.id}
+          isRemoving={deleteWorkflow.isPending}
           href={`workflows/${item.id}`}
           title={item.name}
           image={
@@ -132,7 +139,7 @@ export const WorkflowList = ({ workflows }: { workflows: Workflow[] }) => {
               })}
             </p>
           }
-          onRemove={() => {}}
+          onRemove={handleDelete}
         />
       )}
       getKey={(item, index) => item.id}
