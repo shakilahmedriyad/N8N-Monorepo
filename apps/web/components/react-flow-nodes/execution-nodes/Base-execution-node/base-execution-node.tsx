@@ -2,7 +2,6 @@ import { BaseHandle } from "@/components/react-flow/base-handle";
 import { BaseNode, BaseNodeContent } from "@/components/react-flow/base-node";
 import WorkflowNode from "@/components/workflow-node/workflow-node";
 import { Position } from "@xyflow/react";
-import { Globe2Icon } from "lucide-react";
 import { ReactNode } from "react";
 
 type BaseExecutionNodeProps = {
@@ -11,6 +10,7 @@ type BaseExecutionNodeProps = {
   description?: string;
   onDelete?: () => void;
   onUpdate?: () => void;
+  onDoubleClick?: () => void;
   hideToolbar?: boolean;
 };
 
@@ -21,6 +21,7 @@ export default function BaseExecutionNode({
   onDelete,
   onUpdate,
   hideToolbar,
+  onDoubleClick,
 }: BaseExecutionNodeProps) {
   return (
     <WorkflowNode
@@ -30,7 +31,7 @@ export default function BaseExecutionNode({
       onDelete={onDelete}
       onUpdate={onUpdate}
     >
-      <BaseNode>
+      <BaseNode onDoubleClick={onDoubleClick}>
         <BaseNodeContent>
           {children}
           <BaseHandle position={Position.Right} type="source" id={"source-1"} />

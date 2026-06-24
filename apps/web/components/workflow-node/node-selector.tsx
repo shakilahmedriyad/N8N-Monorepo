@@ -51,39 +51,45 @@ export default function NodeSelector({
   asChild: boolean;
 }) {
   const { setNodes, screenToFlowPosition } = useReactFlow();
-  const nodes = useNodes();
 
   const handleNodeCreate = useCallback((type: NodeType) => {
-    if (nodes.some((node) => node.type == type)) {
-      toast.error(
-        `this ${type} node already exist. try creating other types node`,
-      );
-      return;
-    }
+    setNodes((nodes) => {
+      if (
+        nodes.some(
+          (node) =>
+            node.type == NodeType.MANUAL_TRIGGER &&
+            type == NodeType.MANUAL_TRIGGER,
+        )
+      ) {
+        toast.error(
+          `this ${NodeType.MANUAL_TRIGGER} node already exist. try creating other types node`,
+        );
+        return nodes;
+      }
 
-    const base = screenToFlowPosition({
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
+      const base = screenToFlowPosition({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      });
+
+      const position = {
+        x: base.x + (Math.random() - 0.5) * 120,
+        y: base.y + (Math.random() - 0.5) * 120,
+      };
+
+      const newNode: Node = {
+        id: createId(),
+        data: {},
+        position,
+        type: type,
+      };
+
+      if (nodes.some((node) => node.type == NodeType.INITIAL)) {
+        return [newNode];
+      }
+
+      return [...nodes, newNode];
     });
-
-    const position = {
-      x: base.x + (Math.random() - 0.5) * 120,
-      y: base.y + (Math.random() - 0.5) * 120,
-    };
-
-    const newNode: Node = {
-      id: createId(),
-      data: {},
-      position,
-      type: NodeType.HTTP_TRIGGER,
-    };
-
-    if (nodes.some((node) => node.type == NodeType.INITIAL)) {
-      setNodes([newNode]);
-      return;
-    }
-
-    setNodes((prevNode) => [...prevNode, newNode]);
   }, []);
 
   return (
