@@ -12,6 +12,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSuspenseWorkflowbyId } from "@/features/editor/hooks/use-get-workflow-by-id";
 import useWorkflowUpdate from "@/features/editor/hooks/use-update-workflow";
 import { Workflow } from "@repo/contracts";
+import { useReactFlow } from "@xyflow/react";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { RefObject, useEffect, useRef, useState } from "react";
@@ -27,9 +28,14 @@ export default function EditorHeader({ workflowId }: { workflowId: string }) {
 }
 
 export function EditorSaveButton({ workflowId }: { workflowId: string }) {
+  const { getNodes, getEdges } = useReactFlow();
+  const handleSave = () => {
+    console.log("nodes", getNodes());
+    console.log("edges", getEdges());
+  };
   return (
     <div className="ml-auto">
-      <Button disabled={false}>
+      <Button onClick={handleSave} disabled={false}>
         <SaveIcon />
         Save
       </Button>
