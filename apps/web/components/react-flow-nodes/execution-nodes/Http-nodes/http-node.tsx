@@ -13,6 +13,8 @@ type HtttpExecutionNodeProps = {
 
 type NodePropsType = Node<HtttpExecutionNodeProps>;
 
+const status = "initial";
+
 export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
   const description = props.data.url ? props.data.url : "Not configured yet";
   return (
@@ -20,8 +22,9 @@ export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
       {...props}
       title="Http Request"
       description={description}
+      status={status}
     >
-      <GlobeIcon />
+      <GlobeIcon className="text-muted-foreground size-4 group-hover:text-accent-foreground" />
     </BaseExecutionNode>
   );
 });

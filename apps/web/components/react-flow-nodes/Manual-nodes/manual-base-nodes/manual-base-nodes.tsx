@@ -1,5 +1,9 @@
 import { BaseHandle } from "@/components/react-flow/base-handle";
 import { BaseNode, BaseNodeContent } from "@/components/react-flow/base-node";
+import {
+  NodeStatus,
+  NodeStatusIndicator,
+} from "@/components/react-flow/node-status-indicator";
 import WorkflowNode from "@/components/workflow-node/workflow-node";
 import { Position, useReactFlow } from "@xyflow/react";
 import { ReactNode } from "react";
@@ -7,6 +11,7 @@ import { ReactNode } from "react";
 type BaseManualNodeProps = {
   id: string;
   title: string;
+  status?: NodeStatus;
   children: ReactNode;
   description?: string;
   onUpdate?: () => void;
@@ -18,6 +23,7 @@ export default function BaseManualNode({
   id,
   title,
   children,
+  status = "initial",
   description,
   onUpdate,
   hideToolbar,
@@ -40,12 +46,26 @@ export default function BaseManualNode({
       onDelete={handleDelete}
       onUpdate={onUpdate}
     >
-      <BaseNode onDoubleClick={onDoubleClick} className="rounded-l-2xl">
-        <BaseNodeContent>
-          {children}
-          <BaseHandle position={Position.Right} type="source" id={"source-1"} />
-        </BaseNodeContent>
-      </BaseNode>
+      <NodeStatusIndicator
+        status={status}
+        variant="border"
+        className="rounded-l-2xl"
+      >
+        <BaseNode
+          onDoubleClick={onDoubleClick}
+          className="rounded-l-2xl relative"
+          status={status}
+        >
+          <BaseNodeContent>
+            {children}
+            <BaseHandle
+              position={Position.Right}
+              type="source"
+              id={"source-1"}
+            />
+          </BaseNodeContent>
+        </BaseNode>
+      </NodeStatusIndicator>
     </WorkflowNode>
   );
 }
