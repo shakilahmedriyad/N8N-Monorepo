@@ -11,6 +11,9 @@ importers:
       '@xyflow/react':
         specifier: ^12.11.0
         version: 12.11.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      random-string-generator:
+        specifier: ^1.0.7
+        version: 1.0.7
       superjson:
         specifier: ^2.2.6
         version: 2.2.6
@@ -5631,6 +5634,9 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
+
+  random-string-generator@1.0.7:
+    resolution: {integrity: sha512-Nypoclbe9hWE2TUy8z4TtncLdBYHGOnaywkJ3gWp2zNpCbhuDQ1oc0fYdzet5a7hOoisGYvcDN8lzrc+O8MWaw==}
 
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
@@ -12247,6 +12253,8 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
+
+  random-string-generator@1.0.7: {}
 
   range-parser@1.2.1: {}
 

@@ -3,13 +3,14 @@ import {
   CreateWorkflowDto,
   PaginationDto,
   UpdateWorkflowDto,
+  SaveWorkflowNodesDto,
 } from '@repo/contracts';
-import type { Edge, Node, XYPosition } from '@xyflow/react';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 import { CreateWorkflowProvider } from './create-workflow.provider';
 import { GetWorkflowProvider } from './get-workflow.provider';
 import { GetWorkflowByIdProvider } from './get-workflow-by-id.provider';
+import { SaveWorkflowNodesProvider } from './save-workflow-nodes.provider';
 
 /**
  * Managing workflow business logic
@@ -35,6 +36,10 @@ export class WorkflowService {
      * Injecting get Workflow by id provider
      */
     private readonly getWorkflowByIdProvider: GetWorkflowByIdProvider,
+    /**
+     * Injecting get Workflow by id provider
+     */
+    private readonly saveWorkflowNodesProvider: SaveWorkflowNodesProvider,
   ) {}
 
   public createWorkflow(
@@ -51,8 +56,27 @@ export class WorkflowService {
     return this.getWorkflowProvider.getWorkflows(paginationDto, session);
   }
 
-  public async getWorkflowById(workflowId: string, session: UserSession) {
+  public getWorkflowById(workflowId: string, session: UserSession) {
     return this.getWorkflowByIdProvider.getWorkflowById(workflowId, session);
+  }
+
+  /**
+   *
+   * @param saveWorkflowNodesDto
+   * @param session
+   * @returns
+   *
+   * save workflow nodes
+   */
+
+  public saveWorkflowNodes(
+    saveWorkflowNodesDto: SaveWorkflowNodesDto,
+    session: UserSession,
+  ) {
+    return this.saveWorkflowNodesProvider.saveWorkflowNodes(
+      saveWorkflowNodesDto,
+      session,
+    );
   }
 
   public async updateWorkflow(

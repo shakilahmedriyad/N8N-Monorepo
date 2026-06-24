@@ -39,7 +39,7 @@ export const WorkflowHeader = () => {
       },
       {
         onSuccess(data) {
-          router.push(`/workflows/${data.name}`);
+          router.push(`/workflows/${data.id}`);
         },
       },
     );

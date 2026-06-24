@@ -48,7 +48,7 @@ export default function NodeSelector({
   asChild = false,
 }: {
   children: ReactNode;
-  asChild: boolean;
+  asChild?: boolean;
 }) {
   const { setNodes, screenToFlowPosition } = useReactFlow();
 

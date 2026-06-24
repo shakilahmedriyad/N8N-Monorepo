@@ -1,5 +1,6 @@
 import * as z from "zod";
-import type { Edge, Node } from "@xyflow/react";
+import { Position, type Edge, type Node } from "@xyflow/react";
+import { NodeType } from "../enums/node-enums";
 
 /**
  * Workflow type
@@ -56,3 +57,29 @@ export const UpdateWorkflowSchema = z.object({
 });
 
 export type UpdateWorkflowDto = z.infer<typeof UpdateWorkflowSchema>;
+
+/**
+ * Save Workflow Nodes type
+ */
+
+export const nodeSchema = z.object({
+  id: z.string,
+  position: z.object({
+    x: z.number,
+    y: z.number,
+  }),
+  type: NodeType,
+  data: z.json(),
+});
+
+export const connectionSchema = z.object({
+  
+})
+
+export const SaveWorkflowNodesSchema = z.object({
+  workflowId: z.string(),
+  nodes: z.array(NodeSchema),
+  connections: z.array(EdgeSchema),
+});
+
+export type SaveWorkflowNodesDto = z.infer<typeof SaveWorkflowNodesSchema>;

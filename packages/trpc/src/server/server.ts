@@ -16,11 +16,12 @@ const t = initTRPC.create({ transformer: superjson });
 const publicProcedure = t.procedure;
 import {
   PAGINATION_SCHEMA,
-  createPaginationResponseSchema,
   WorkflowSchema,
+  createPaginationResponseSchema,
   GetWorkflowByIdSchema,
   GetWorkflowByIdOutputSchema,
   CreateWorkflowSchema,
+  SaveWorkflowNodesSchema,
   UpdateWorkflowSchema,
 } from "@repo/contracts";
 
@@ -41,7 +42,11 @@ export const appRouter = t.router({
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     createWorkflow: publicProcedure
       .input(CreateWorkflowSchema)
-      .output(CreateWorkflowSchema)
+      .output(WorkflowSchema)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    saveWorkflowNodes: publicProcedure
+      .input(SaveWorkflowNodesSchema)
+      .output(WorkflowSchema)
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     updateWorkflow: publicProcedure
       .input(UpdateWorkflowSchema)

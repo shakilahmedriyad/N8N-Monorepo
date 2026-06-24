@@ -5,15 +5,17 @@ import {
   GetWorkflowByIdOutputSchema,
   GetWorkflowByIdSchema,
   PAGINATION_SCHEMA,
+  SaveWorkflowNodesSchema,
   UpdateWorkflowSchema,
   WorkflowSchema,
 } from '@repo/contracts';
 
-import {
-  type CreateWorkflowDto,
-  type GetWorkflowByIdDto,
-  type PaginationDto,
-  type UpdateWorkflowDto,
+import type {
+  CreateWorkflowDto,
+  GetWorkflowByIdDto,
+  PaginationDto,
+  UpdateWorkflowDto,
+  SaveWorkflowNodesDto,
 } from '@repo/contracts';
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
@@ -73,7 +75,7 @@ export class WorkflowRouter {
 
   @Mutation({
     input: CreateWorkflowSchema,
-    output: CreateWorkflowSchema,
+    output: WorkflowSchema,
   })
   public async createWorkflow(
     @Input() createWorkflowDto: CreateWorkflowDto,
@@ -84,9 +86,24 @@ export class WorkflowRouter {
 
   /**
    *
-   * route for updating workflows
+   * route for saving workflow Nodes
    */
 
+  @Mutation({
+    input: SaveWorkflowNodesSchema,
+    output: WorkflowSchema,
+  })
+  public saveWorkflowNodes(
+    @Input() SaveWorkflowDto: SaveWorkflowNodesDto,
+    @Ctx() ctx: UserSession,
+  ) {
+    return this.workflowService.saveWorkflowNodes(SaveWorkflowDto, ctx);
+  }
+
+  /**
+   *
+   * route for updating workflows
+   */
   @Mutation({
     input: UpdateWorkflowSchema,
     output: WorkflowSchema,
