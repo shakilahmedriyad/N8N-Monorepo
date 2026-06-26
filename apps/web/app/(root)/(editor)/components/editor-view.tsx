@@ -21,9 +21,12 @@ import "@xyflow/react/dist/style.css";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NodeSelector from "@/components/workflow-node/node-selector";
+import ExecuteButton from "./execute-button";
+import useExecuteWorkflow from "@/features/editor/hooks/use-execute-workflow";
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
   const { data } = useSuspenseWorkflowbyId(workflowId);
+  const executeWorkflow = useExecuteWorkflow();
   const [nodes, setNodes] = useState<Node[]>(data.nodes);
   const [edges, setEdges] = useState<Edge[]>(data.connections);
 
@@ -42,6 +45,10 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
       setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     [],
   );
+
+  const handleExecute = () => {
+    executeWorkflow.mutate({ workflowId });
+  };
 
   return (
     <div className="size-full">
@@ -62,6 +69,9 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
               <PlusIcon />
             </Button>
           </NodeSelector>
+        </Panel>
+        <Panel position="bottom-center">
+          <ExecuteButton onClick={handleExecute} />
         </Panel>
       </ReactFlow>
     </div>

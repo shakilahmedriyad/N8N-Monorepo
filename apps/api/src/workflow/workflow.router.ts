@@ -132,4 +132,20 @@ export class WorkflowRouter {
   ) {
     return await this.workflowService.removeWorkflow(deleteWorkflowDto, ctx);
   }
+
+  /**
+   * curds ends here , execution starts from here
+   */
+
+  @Mutation({
+    input: z.object({
+      workflowId: z.string(),
+    }),
+  })
+  public execute(
+    @Input() executionDto: { workflowId: string },
+    @Ctx() ctx: UserSession,
+  ) {
+    return this.workflowService.execute(executionDto, ctx);
+  }
 }

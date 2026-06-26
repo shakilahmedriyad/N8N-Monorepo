@@ -11,6 +11,7 @@ import { CreateWorkflowProvider } from './create-workflow.provider';
 import { GetWorkflowProvider } from './get-workflow.provider';
 import { GetWorkflowByIdProvider } from './get-workflow-by-id.provider';
 import { SaveWorkflowNodesProvider } from './save-workflow-nodes.provider';
+import { WorkflowExecutionProvider } from './workflow-execution.provider';
 
 /**
  * Managing workflow business logic
@@ -40,6 +41,11 @@ export class WorkflowService {
      * Injecting get Workflow by id provider
      */
     private readonly saveWorkflowNodesProvider: SaveWorkflowNodesProvider,
+    /**
+     * Injecting execute Workflow  provider
+     *
+     */
+    private readonly workflowExecutionProvider: WorkflowExecutionProvider,
   ) {}
 
   public createWorkflow(
@@ -114,5 +120,12 @@ export class WorkflowService {
     } catch (error) {
       throw new RequestTimeoutException();
     }
+  }
+
+  public async execute(
+    executeDto: { workflowId: string },
+    session: UserSession,
+  ) {
+    return this.workflowExecutionProvider.execute(executeDto, session);
   }
 }

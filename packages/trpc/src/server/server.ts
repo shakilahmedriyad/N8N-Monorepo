@@ -60,6 +60,13 @@ export const appRouter = t.router({
       )
       .output(WorkflowSchema)
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    execute: publicProcedure
+      .input(
+        z.object({
+          workflowId: z.string(),
+        }),
+      )
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
   }),
 });
 

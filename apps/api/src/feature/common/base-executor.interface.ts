@@ -1,0 +1,4 @@
+interface BaseExecutor {
+  data?: any;
+  
+}
