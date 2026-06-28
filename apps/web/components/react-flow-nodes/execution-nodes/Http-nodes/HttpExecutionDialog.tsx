@@ -25,16 +25,23 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Loader2 } from "lucide-react";
-import { ReactNode, useState } from "react";
+
 import { useReactFlow } from "@xyflow/react";
 
 const httpExecutionSchema = z.object({
-  url: z.string().url("Please enter a valid URL"),
+  variable: z
+    .string()
+    .min(1, "Variable name is required")
+    .regex(
+      /^[A-Za-z_$][A-Za-z0-9_$]*$/,
+      "Must start with letter, _, or $ and contain only letters, numbers, _, or $",
+    ),
+  url: z.url("Please enter a valid URL"),
   method: z.enum(["GET", "PATCH", "POST", "DELETE"]),
   body: z.string().optional(),
 });
@@ -61,11 +68,11 @@ export default function HttpExecutionDialog({
     handleSubmit,
     setValue,
     watch,
-    reset,
     formState: { errors },
   } = useForm<HttpExecutionFormData>({
     resolver: zodResolver(httpExecutionSchema),
     defaultValues: {
+      variable: defaultValues?.variable || "",
       url: defaultValues?.url || "",
       method: defaultValues?.method || "GET",
       body: defaultValues?.body || "",
@@ -73,11 +80,12 @@ export default function HttpExecutionDialog({
   });
 
   const method = watch("method");
+  const variable = watch("variable");
 
   const handleFormSubmit = async (data: HttpExecutionFormData) => {
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (node.id != id) return node;
+        if (node.id !== id) return node;
         const newNode = {
           ...node,
           data,
@@ -95,19 +103,45 @@ export default function HttpExecutionDialog({
         <DialogHeader>
           <DialogTitle>HTTP Request</DialogTitle>
           <DialogDescription>
-            Configure your HTTP request settings
+            Configure your HTTP request and store the response
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <FieldGroup>
             <Field>
+              <FieldLabel>Variable Name</FieldLabel>
+              <Input
+                type="text"
+                placeholder="myApiResponse"
+                {...register("variable")}
+              />
+              <FieldDescription>
+                Store response as a variable. Use it in later steps like:{" "}
+                <code className="text-xs bg-muted px-1 py-0.5 rounded">
+                  {variable
+                    ? `{{${variable}.userId}}`
+                    : "{{variableName.property}}"}
+                </code>
+              </FieldDescription>
+              {errors.variable && (
+                <FieldError>{errors.variable.message}</FieldError>
+              )}
+            </Field>
+
+            <Field>
               <FieldLabel>URL</FieldLabel>
               <Input
                 type="url"
-                placeholder="https://api.example.com/endpoint"
+                placeholder="https://api.example.com/users"
                 {...register("url")}
               />
+              <FieldDescription>
+                Use variables from previous steps like:{" "}
+                <code className="text-xs bg-muted px-1 py-0.5 rounded">
+                  {"{{previousVar.id}}"}
+                </code>
+              </FieldDescription>
               {errors.url && <FieldError>{errors.url.message}</FieldError>}
             </Field>
 
@@ -138,31 +172,25 @@ export default function HttpExecutionDialog({
               <Field>
                 <FieldLabel>Body</FieldLabel>
                 <Textarea
-                  placeholder='{"key": "value"}'
+                  placeholder='{"name": "{{userName}}", "email": "user@example.com"}'
                   rows={4}
                   {...register("body")}
                 />
+                <FieldDescription>
+                  JSON body. You can use variables from previous steps
+                </FieldDescription>
                 {errors.body && <FieldError>{errors.body.message}</FieldError>}
               </Field>
             )}
           </FieldGroup>
 
           <DialogFooter className="mt-6">
-            <DialogClose>
-              <Button
-                type="button"
-                variant="outline"
-                // disabled={isLoading}
-              >
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              // disabled={isLoading}
-            >
-              save
-            </Button>
+            <Button type="submit">Save</Button>
           </DialogFooter>
         </form>
       </DialogContent>

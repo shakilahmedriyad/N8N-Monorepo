@@ -37,6 +37,7 @@
     "@repo/trpc": "workspace:*",
     "@thallesp/nestjs-better-auth": "^2.6.1",
     "@trpc/server": "^11.17.0",
+    "axios": "^1.18.1",
     "better-auth": "^1.6.18",
     "bullmq": "^5.79.1",
     "ioredis": "^5.11.1",

@@ -40,7 +40,7 @@ export default function WorkflowNode({
         <NodeToolbar
           isVisible
           position={Position.Bottom}
-          className="flex flex-col text-center"
+          className="flex flex-col text-center max-w-3xs"
         >
           <span className="font-heading font-bold">{title}</span>
           <span className="text-muted-foreground truncate">{description}</span>

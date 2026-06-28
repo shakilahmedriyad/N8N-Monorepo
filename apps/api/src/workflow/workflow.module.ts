@@ -8,9 +8,10 @@ import { GetWorkflowByIdProvider } from './providers/get-workflow-by-id.provider
 import { SaveWorkflowNodesProvider } from './providers/save-workflow-nodes.provider';
 import { WorkflowExecutionProvider } from './providers/workflow-execution.provider';
 import { BullModule } from '@nestjs/bullmq';
-import { WorkflowProcessor } from 'src/common/queue/workflow.processor';
+import { WorkflowProcessor } from 'src/common/processors/workflow.processor';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { HttpNodeExecutor } from 'src/feature/http-executor/http-executor';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
     SaveWorkflowNodesProvider,
     WorkflowExecutionProvider,
     WorkflowProcessor,
+    HttpNodeExecutor,
   ],
 })
 export class WorkflowModule {}

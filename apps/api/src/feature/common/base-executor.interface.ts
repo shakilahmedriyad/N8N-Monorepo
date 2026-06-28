@@ -1,4 +1,0 @@
-interface BaseExecutor {
-  data?: any;
-  
-}

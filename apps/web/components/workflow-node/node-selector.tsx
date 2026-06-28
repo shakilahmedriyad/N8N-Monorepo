@@ -1,10 +1,5 @@
 import Image from "next/image";
-import {
-  isValidElement,
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-} from "react";
+import { ReactNode, useCallback } from "react";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { NodeType } from "@repo/contracts";
 import { GlobeIcon, MousePointer2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Node, useNodes, useReactFlow } from "@xyflow/react";
+import { Node, useReactFlow } from "@xyflow/react";
 import { toast } from "sonner";
 import { createId } from "@paralleldrive/cuid2";
 

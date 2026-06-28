@@ -3,16 +3,16 @@ import { BadRequestException } from '@nestjs/common';
 import { ConnectionModel, NodeModel } from '@repo/database';
 import { Job } from 'bullmq';
 import { DatabaseService } from 'src/database/providers/database/database.service';
+import { HttpNodeExecutor } from 'src/feature/http-executor/http-executor';
 import toposort from 'toposort';
 
 @Processor('workflow')
 export class WorkflowProcessor extends WorkerHost {
-  constructor(private readonly databaseService: DatabaseService) {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly httpNodeExecutor: HttpNodeExecutor,
+  ) {
     super();
-  }
-
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async process(job: Job): Promise<any> {
@@ -32,11 +32,20 @@ export class WorkflowProcessor extends WorkerHost {
       workflow.connections,
     );
 
+    let response: any;
+
     for (const node of executionNodes) {
-      await this.sleep(3000);
-      console.log(node.name);
-      console.log('process done going to next one');
+      if (node.type == 'HTTP_TRIGGER') {
+        const nodeData = node.data as any;
+        response = await this.httpNodeExecutor.execute(node, {
+          previousNodeOutputs: response,
+          workflowId: job.data.workflowId,
+          currentNodeInput: nodeData || {},
+          variable: nodeData?.variable as string,
+        });
+      }
     }
+    console.log(response);
 
     return 'something ....';
   }
