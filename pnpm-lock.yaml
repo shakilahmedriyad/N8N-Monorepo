@@ -90,6 +90,9 @@ importers:
       bullmq:
         specifier: ^5.79.1
         version: 5.79.1
+      handlebars:
+        specifier: ^4.7.9
+        version: 4.7.9
       ioredis:
         specifier: ^5.11.1
         version: 5.11.1

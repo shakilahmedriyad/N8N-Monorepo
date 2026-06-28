@@ -4,6 +4,7 @@ import {
   ExecutionContextDto,
   NodeExecutionResultDto,
 } from './base-executor.dto';
+import Handlebars from 'handlebars';
 import { NodeModel } from '@repo/database';
 
 export abstract class BaseNodeExecutor {
@@ -11,6 +12,9 @@ export abstract class BaseNodeExecutor {
 
   constructor(loggerContext: string) {
     this.logger = new Logger(loggerContext);
+    Handlebars.registerHelper('json', function (context) {
+      return JSON.stringify(context, null, 2);
+    });
   }
 
   /// this function needs to be implemented
@@ -60,10 +64,27 @@ export abstract class BaseNodeExecutor {
 
   protected resolveInput(input: any, context: ExecutionContextDto): any {
     if (typeof input === 'string') {
-      return input.replace(/\{\{(.+?)\}\}/g, (match, path) => {
-        const value = this.getValueByPath(context.previousNodeOutputs, path);
-        return value !== undefined ? value : match;
-      });
+      try {
+        const template = Handlebars.compile(input);
+        const result = template(context.previousNodeOutputs);
+        // Try to parse as JSON if it looks like JSON
+        if (result.startsWith('{') || result.startsWith('[')) {
+          try {
+            return JSON.parse(result);
+          } catch {
+            return result;
+          }
+        }
+
+        return result;
+      } catch (error: any) {
+        this.logger.warn(`Failed to resolve template: ${input}`, error.message);
+        return input;
+      }
+    }
+
+    if (Array.isArray(input)) {
+      return input.map((item) => this.resolveInput(item, context));
     }
 
     if (typeof input === 'object' && input !== null) {
@@ -75,20 +96,5 @@ export abstract class BaseNodeExecutor {
     }
 
     return input;
-  }
-
-  private getValueByPath(obj: any, path: string): any {
-    const parts = path.trim().split('.');
-    let current = obj;
-
-    for (const part of parts) {
-      if (current && typeof current === 'object' && part in current) {
-        current = current[part];
-      } else {
-        return undefined;
-      }
-    }
-
-    return current;
   }
 }

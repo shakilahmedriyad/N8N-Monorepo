@@ -55,6 +55,7 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     const data = node.data as unknown as HttpNodeData;
 
     const url = this.resolveInput(data.url, context);
+    console.log('Body', data.body);
     const body = this.resolveInput(data.body, context);
     const headers = this.resolveInput(data.headers, context);
     const queryParams = this.resolveInput(data.queryParams, context);
