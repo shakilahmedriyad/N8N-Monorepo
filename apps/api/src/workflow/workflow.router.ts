@@ -1,4 +1,4 @@
-import { Ctx, Input, Mutation, Query, Router } from 'nestjs-trpc';
+import { Ctx, Input, Mutation, Query, Router, Subscription } from 'nestjs-trpc';
 import {
   createPaginationResponseSchema,
   CreateWorkflowSchema,
@@ -20,6 +20,7 @@ import type {
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
 import { type UserSession } from '@thallesp/nestjs-better-auth';
+import { HttpPubSubService } from 'src/feature/pub-sub/Http-Pub-Sub.service';
 
 /**
  * trpc router for workflows
@@ -31,6 +32,10 @@ export class WorkflowRouter {
      * Injecting workflow Service
      */
     private readonly workflowService: WorkflowService,
+    /**
+     * Injecting Http pub sub Service
+     */
+    private readonly httpPubSubService: HttpPubSubService,
   ) {}
 
   /**
@@ -147,5 +152,40 @@ export class WorkflowRouter {
     @Ctx() ctx: UserSession,
   ) {
     return this.workflowService.execute(executionDto, ctx);
+  }
+
+  //// creating subscribe methods
+
+  @Subscription()
+  public async *nodeStatus() {
+    const subscriber = await this.httpPubSubService.subscribe();
+    const queue: any[] = [];
+
+    let notify: (() => void) | null = null;
+
+    subscriber.on('message', (_, message) => {
+      queue.push(JSON.parse(message));
+      if (notify) {
+        notify();
+        notify = null!;
+      }
+    });
+
+    try {
+      while (true) {
+        if (queue.length === 0) {
+          const pending = new Promise<void>((resolve) => {
+            notify = resolve;
+          });
+          await pending;
+        }
+
+        while (queue.length > 0) {
+          yield queue.shift();
+        }
+      }
+    } catch (error) {
+      console.error('Error in nodeStatus subscription:', error);
+    }
   }
 }

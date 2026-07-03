@@ -11,6 +11,7 @@ import { TrpcContextProvider } from './common/context/trpc-context.provider';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { AuthMiddleware } from './common/middleware/auth.middlware';
+import { FeatureModule } from './feature/feature.module';
 import superjson from 'superjson';
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -58,6 +59,7 @@ const ENV = process.env.NODE_ENV;
       route: '/queues',
       adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
+    FeatureModule,
   ],
   controllers: [],
   providers: [TrpcContextProvider, AuthMiddleware],

@@ -1,10 +1,11 @@
 // node-executors/http-node.executor.ts
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import axios, { AxiosRequestConfig } from 'axios';
 import { BaseNodeExecutor } from '../base-executor/base-executor';
 import { ExecutionContextDto } from '../base-executor/base-executor.dto';
 import { NodeModel } from '@repo/database';
+import { HttpPubSubService } from '../pub-sub/Http-Pub-Sub.service';
 
 interface HttpNodeData {
   url: string;
@@ -17,7 +18,7 @@ interface HttpNodeData {
 
 @Injectable()
 export class HttpNodeExecutor extends BaseNodeExecutor {
-  constructor() {
+  constructor(private readonly httpPubSubService: HttpPubSubService) {
     super(HttpNodeExecutor.name);
   }
 
@@ -27,16 +28,34 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     const data = node.data as unknown as HttpNodeData;
 
     if (!data.url) {
-      throw new Error('HTTP URL is required');
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: node.workflowId,
+      });
+      throw new BadRequestException('Resolved URL is required');
     }
 
     if (!data.method) {
-      throw new Error('HTTP method is required');
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: node.workflowId,
+      });
+      throw new BadRequestException('HTTP method is required');
     }
 
     const validMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
     if (!validMethods.includes(data.method)) {
-      throw new Error(
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: node.workflowId,
+      });
+      throw new BadRequestException(
         `Invalid HTTP method. Must be one of: ${validMethods.join(', ')}`,
       );
     }
@@ -44,7 +63,13 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     try {
       new URL(data.url);
     } catch (error) {
-      throw new Error('Invalid URL format');
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: node.workflowId,
+      });
+      throw new BadRequestException('Invalid URL format');
     }
   }
 
@@ -52,13 +77,31 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     node: NodeModel,
     context: ExecutionContextDto,
   ): Promise<any> {
+    /// sending the loading event
+    await this.httpPubSubService.publish({
+      nodeId: node.id,
+      status: 'loading',
+      createdAt: new Date(),
+      workflowId: context.workflowId,
+    });
+
+    await this.sleep(5000); // Simulate some processing time
+
     const data = node.data as unknown as HttpNodeData;
 
     const url = this.resolveInput(data.url, context);
-    console.log('Body', data.body);
     const body = this.resolveInput(data.body, context);
     const headers = this.resolveInput(data.headers, context);
     const queryParams = this.resolveInput(data.queryParams, context);
+    if (!context.variable) {
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: context.workflowId,
+      });
+      throw new BadRequestException('API variable is required');
+    }
 
     this.logger.log(`Making ${data.method} request to: ${url}`);
 
@@ -83,6 +126,12 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     try {
       const response = await axios(config);
       // later we will add status update over here
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'success',
+        createdAt: new Date(),
+        workflowId: context.workflowId,
+      });
       return {
         status: response.status,
         statusText: response.statusText,
@@ -90,12 +139,18 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
         data: response.data,
       };
     } catch (error) {
+      await this.httpPubSubService.publish({
+        nodeId: node.id,
+        status: 'error',
+        createdAt: new Date(),
+        workflowId: context.workflowId,
+      });
       if (axios.isAxiosError(error)) {
         if (error.response) {
           this.logger.error(
             `HTTP request failed with status: ${error.response.status}`,
           );
-          throw new Error(
+          throw new BadRequestException(
             `HTTP ${error.response.status}: ${error.response.statusText}`,
           );
         } else if (error.request) {

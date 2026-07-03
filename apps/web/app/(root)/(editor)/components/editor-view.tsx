@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   applyNodeChanges,
@@ -23,12 +23,16 @@ import { Button } from "@/components/ui/button";
 import NodeSelector from "@/components/workflow-node/node-selector";
 import ExecuteButton from "./execute-button";
 import useExecuteWorkflow from "@/features/editor/hooks/use-execute-workflow";
+import useExecuteSubscription from "@/features/editor/hooks/use-execute-subscription";
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
   const { data } = useSuspenseWorkflowbyId(workflowId);
   const executeWorkflow = useExecuteWorkflow();
   const [nodes, setNodes] = useState<Node[]>(data.nodes);
   const [edges, setEdges] = useState<Edge[]>(data.connections);
+
+  /// updating the nodes status based on the subscription from the server
+  useExecuteSubscription(setNodes);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>
@@ -48,6 +52,8 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
 
   const handleExecute = () => {
     executeWorkflow.mutate({ workflowId });
+    // just a reset for now, we will handle the response later
+    setNodes(data.nodes);
   };
 
   return (

@@ -23,15 +23,15 @@ export abstract class BaseNodeExecutor {
     context: ExecutionContextDto,
   ): Promise<any>;
 
+  protected sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async execute(
     node: NodeModel,
     context: ExecutionContextDto,
   ): Promise<NodeExecutionResultDto> {
     try {
-      if (!context.variable) {
-        throw new BadRequestException('api variable is not found');
-      }
-
       this.logger.log(`Executing node: ${node.name} (${node.type})`);
 
       await this.validate(node);

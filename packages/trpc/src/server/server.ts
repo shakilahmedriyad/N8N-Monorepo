@@ -67,6 +67,9 @@ export const appRouter = t.router({
         }),
       )
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    nodeStatus: publicProcedure.subscription(
+      async () => "PLACEHOLDER_DO_NOT_REMOVE" as any,
+    ),
   }),
 });
 

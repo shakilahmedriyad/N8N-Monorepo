@@ -21,6 +21,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.3.0",
     "@xyflow/react": "^12.11.0",
     "random-string-generator": "^1.0.7",
     "superjson": "^2.2.6"

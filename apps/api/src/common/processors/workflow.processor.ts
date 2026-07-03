@@ -45,8 +45,6 @@ export class WorkflowProcessor extends WorkerHost {
         });
       }
     }
-    console.log(response);
-
     return 'something ....';
   }
 

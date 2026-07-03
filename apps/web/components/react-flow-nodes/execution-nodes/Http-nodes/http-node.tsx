@@ -9,14 +9,15 @@ type HtttpExecutionNodeProps = {
   url?: string;
   method?: "GET" | "PATCH" | "POST" | "DELETE";
   body?: string;
+  status: "loading" | "success" | "error" | "initial";
   [key: string]: unknown;
 };
 
 type NodePropsType = Node<HtttpExecutionNodeProps>;
 
-const status = "initial";
-
 export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
+  const status = props.data.status;
+
   const [open, setOpen] = useState(false);
   const description = props.data.url
     ? props.data.method + " : " + props.data.url
@@ -38,7 +39,7 @@ export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
         {...props}
         title="Http Request"
         description={description}
-        status={status}
+        status={status || "initial"}
         onDoubleClick={handleUpdate}
         onUpdate={handleUpdate}
       >
