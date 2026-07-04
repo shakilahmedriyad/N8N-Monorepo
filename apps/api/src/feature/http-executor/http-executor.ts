@@ -1,5 +1,9 @@
 // node-executors/http-node.executor.ts
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 
 import axios, { AxiosRequestConfig } from 'axios';
 import { BaseNodeExecutor } from '../base-executor/base-executor';
@@ -155,7 +159,7 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
           );
         } else if (error.request) {
           this.logger.error('No response received from server');
-          throw new Error('No response from server');
+          throw new RequestTimeoutException('No response from server');
         }
 
         this.logger.error('Error setting up request:', error.message);

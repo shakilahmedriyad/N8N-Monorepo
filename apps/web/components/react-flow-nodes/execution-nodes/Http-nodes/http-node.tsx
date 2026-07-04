@@ -4,19 +4,23 @@ import { GlobeIcon } from "lucide-react";
 import { memo, useState } from "react";
 import BaseExecutionNode from "../Base-execution-node/base-execution-node";
 import HttpExecutionDialog from "./HttpExecutionDialog";
+import useExecuteSubscription from "@/features/editor/hooks/use-execute-subscription";
+import { NodeStatus } from "@/components/react-flow/node-status-indicator";
 
 type HtttpExecutionNodeProps = {
   url?: string;
   method?: "GET" | "PATCH" | "POST" | "DELETE";
   body?: string;
-  status: "loading" | "success" | "error" | "initial";
   [key: string]: unknown;
 };
 
 type NodePropsType = Node<HtttpExecutionNodeProps>;
 
 export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
-  const status = props.data.status;
+  const nodeId = props.id;
+  const [status, setStatus] = useState<NodeStatus>("initial");
+
+  useExecuteSubscription(nodeId, setStatus);
 
   const [open, setOpen] = useState(false);
   const description = props.data.url
