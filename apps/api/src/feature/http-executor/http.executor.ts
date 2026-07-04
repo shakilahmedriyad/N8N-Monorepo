@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import axios, { AxiosRequestConfig } from 'axios';
-import { BaseNodeExecutor } from '../base-executor/base-executor';
+import { BaseNodeExecutor } from '../base-executor/base.executor';
 import { ExecutionContextDto } from '../base-executor/base-executor.dto';
 import { NodeModel } from '@repo/database';
 import { HttpPubSubService } from '../pub-sub/Http-Pub-Sub.service';
