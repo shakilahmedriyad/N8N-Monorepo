@@ -72,9 +72,7 @@ export const nodeSchema = z.object({
   data: z.json(),
 });
 
-export const connectionSchema = z.object({
-  
-})
+export const connectionSchema = z.object({});
 
 export const SaveWorkflowNodesSchema = z.object({
   workflowId: z.string(),

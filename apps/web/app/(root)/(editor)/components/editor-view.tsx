@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   ReactFlow,
   applyNodeChanges,
@@ -21,15 +21,18 @@ import "@xyflow/react/dist/style.css";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NodeSelector from "@/components/workflow-node/node-selector";
-import ExecuteButton from "./execute-button";
+import { ExecuteButton } from "./execute-button";
 import useExecuteWorkflow from "@/features/editor/hooks/use-execute-workflow";
+import useExecuteSubscription from "@/features/editor/hooks/use-execute-subscription";
+import useNodeStatusStore from "@/store/node-status-store";
 
 export default function EditorView({ workflowId }: { workflowId: string }) {
   const { data } = useSuspenseWorkflowbyId(workflowId);
   const executeWorkflow = useExecuteWorkflow();
   const [nodes, setNodes] = useState<Node[]>(data.nodes);
   const [edges, setEdges] = useState<Edge[]>(data.connections);
-
+  const isPending = useNodeStatusStore((state) => state.isPending);
+  useExecuteSubscription();
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
@@ -47,10 +50,11 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
   );
 
   const handleExecute = () => {
+    useNodeStatusStore.getState().reset();
     executeWorkflow.mutate({ workflowId });
-    // just a reset for now, we will handle the response later
-    setNodes(data.nodes);
   };
+
+  console.log(isPending);
 
   return (
     <div className="size-full">
@@ -73,7 +77,7 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
           </NodeSelector>
         </Panel>
         <Panel position="bottom-center">
-          <ExecuteButton onClick={handleExecute} />
+          <ExecuteButton onClick={handleExecute} isPending={isPending} />
         </Panel>
       </ReactFlow>
     </div>

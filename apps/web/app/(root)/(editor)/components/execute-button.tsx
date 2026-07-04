@@ -1,11 +1,30 @@
 import { Button } from "@/components/ui/button";
-import { FlaskConicalIcon } from "lucide-react";
+import { FlaskConicalIcon, Loader2Icon } from "lucide-react";
+import { memo } from "react";
 
-export default function ExecuteButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Button size={"lg"} onClick={onClick}>
-      <FlaskConicalIcon />
-      <span>Execute Workflow</span>
-    </Button>
-  );
-}
+export const ExecuteButton = memo(
+  ({ onClick, isPending }: { onClick: () => void; isPending: boolean }) => {
+    {
+      return (
+        <Button
+          className="flex items-center justify-center"
+          size={"lg"}
+          onClick={onClick}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <Loader2Icon className="animate-spin mt-3.5 ml-2.5" />
+          ) : (
+            <FlaskConicalIcon />
+          )}
+
+          {isPending ? (
+            <span>Executing workflow ...</span>
+          ) : (
+            <span>Execute Workflow</span>
+          )}
+        </Button>
+      );
+    }
+  },
+);

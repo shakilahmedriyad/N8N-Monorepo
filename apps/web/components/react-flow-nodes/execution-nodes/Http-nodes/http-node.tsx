@@ -6,6 +6,7 @@ import BaseExecutionNode from "../Base-execution-node/base-execution-node";
 import HttpExecutionDialog from "./HttpExecutionDialog";
 import useExecuteSubscription from "@/features/editor/hooks/use-execute-subscription";
 import { NodeStatus } from "@/components/react-flow/node-status-indicator";
+import useNodeStatusStore from "@/store/node-status-store";
 
 type HtttpExecutionNodeProps = {
   url?: string;
@@ -18,9 +19,7 @@ type NodePropsType = Node<HtttpExecutionNodeProps>;
 
 export const HttpExecutionNode = memo((props: NodeProps<NodePropsType>) => {
   const nodeId = props.id;
-  const [status, setStatus] = useState<NodeStatus>("initial");
-
-  useExecuteSubscription(nodeId, setStatus);
+  const status = useNodeStatusStore((state) => state.nodeStatuses[nodeId]);
 
   const [open, setOpen] = useState(false);
   const description = props.data.url
