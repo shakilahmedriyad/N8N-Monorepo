@@ -36,7 +36,7 @@ const getUrl = () => {
     return "/api/trpc";
   }
 
-  return `${process.env.NEXT_API_URL}/api/trpc`;
+  return `${process.env.NEXT_PUBLIC_API_URL}/api/trpc`;
 };
 
 export function TRPCReactProvider(

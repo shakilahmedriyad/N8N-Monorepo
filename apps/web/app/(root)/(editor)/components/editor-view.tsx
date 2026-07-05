@@ -54,8 +54,6 @@ export default function EditorView({ workflowId }: { workflowId: string }) {
     executeWorkflow.mutate({ workflowId });
   };
 
-  console.log(isPending);
-
   return (
     <div className="size-full">
       <ReactFlow

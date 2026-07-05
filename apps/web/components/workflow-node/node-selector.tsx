@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { NodeType } from "@repo/contracts";
-import { GlobeIcon, MousePointer2Icon } from "lucide-react";
+import {
+  FileIcon,
+  FileTextIcon,
+  GlobeIcon,
+  MousePointer2Icon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Node, useReactFlow } from "@xyflow/react";
 import { toast } from "sonner";
@@ -29,6 +34,12 @@ const triggerNodes: NodeTypes[] = [
     description: "Manually start this workflow with a click",
     icons: <MousePointer2Icon className="h-5 w-5" />,
     type: NodeType.MANUAL_TRIGGER,
+  },
+  {
+    label: "Google Form Trigger",
+    description: "Start this workflow via Google Form submission",
+    icons: <FileTextIcon className="h-5 w-5" />,
+    type: NodeType.GOOGLE_FORM_TRIGGER,
   },
   {
     label: "HTTP Trigger",
