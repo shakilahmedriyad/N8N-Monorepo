@@ -7,6 +7,7 @@ export class NodeExecutionResultDto {
 export class ExecutionContextDto {
   workflowId: string;
   variable: string;
+  userId: string;
   previousNodeOutputs: Record<string, any>;
   currentNodeInput?: any;
   metadata?: Record<string, any>;

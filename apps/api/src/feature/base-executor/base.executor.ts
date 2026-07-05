@@ -34,7 +34,7 @@ export abstract class BaseNodeExecutor {
     try {
       this.logger.log(`Executing node: ${node.name} (${node.type})`);
 
-      await this.validate(node);
+      await this.validate(node, context);
       const output = await this.executeNode(node, context);
 
       return {
@@ -52,7 +52,10 @@ export abstract class BaseNodeExecutor {
     }
   }
 
-  protected async validate(node: any): Promise<void> {
+  protected async validate(
+    node: any,
+    context: ExecutionContextDto,
+  ): Promise<void> {
     if (!node.id) {
       throw new BadRequestException('Node ID is required');
     }

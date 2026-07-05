@@ -20,7 +20,7 @@ import type {
 import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
 import { type UserSession } from '@thallesp/nestjs-better-auth';
-import { HttpPubSubService } from 'src/feature/pub-sub/Http-Pub-Sub.service';
+import { StatusPubSubService } from 'src/feature/pub-sub/Status-Pub-Sub.service';
 
 /**
  * trpc router for workflows
@@ -33,9 +33,9 @@ export class WorkflowRouter {
      */
     private readonly workflowService: WorkflowService,
     /**
-     * Injecting Http pub sub Service
+     * Injecting Status pub sub Service
      */
-    private readonly httpPubSubService: HttpPubSubService,
+    private readonly statusPubSubService: StatusPubSubService,
   ) {}
 
   /**
@@ -157,8 +157,10 @@ export class WorkflowRouter {
   //// creating subscribe methods
 
   @Subscription()
-  public async *nodeStatus() {
-    const subscriber = await this.httpPubSubService.subscribe();
+  public async *nodeStatus(@Ctx() ctx: UserSession) {
+    const subscriber = await this.statusPubSubService.subscribe(
+      ctx.session.userId,
+    );
     const queue: any[] = [];
 
     let notify: (() => void) | null = null;

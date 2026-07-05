@@ -37,13 +37,14 @@ export class WorkflowProcessor extends WorkerHost {
     for (const node of executionNodes) {
       const nodeData = node.data as any;
       response = await this.executionService.executeNode(node, {
+        userId: job.data.userId,
         previousNodeOutputs: response,
         workflowId: job.data.workflowId,
         currentNodeInput: nodeData || {},
         variable: nodeData?.variable as string,
       });
     }
-    return 'something ....';
+    return response;
   }
 
   private getExecutionOrder(

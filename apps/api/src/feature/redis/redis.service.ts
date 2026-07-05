@@ -24,6 +24,6 @@ export abstract class RedisPubSubService implements OnModuleDestroy {
     this.subscriber.disconnect();
   }
 
-  public abstract publish(data: any): void;
-  public abstract subscribe(): Promise<Redis>;
+  public abstract publish(data: any, userId: string): void;
+  public abstract subscribe(userId: string): Promise<Redis>;
 }

@@ -1,16 +1,16 @@
 import { NodeModel } from '@repo/database';
 import { BaseNodeExecutor } from '../base-executor/base.executor';
-import { ManualPubSubService } from '../pub-sub/manual-pub-sub.service';
 import { ExecutionContextDto } from '../base-executor/base-executor.dto';
 import { Injectable } from '@nestjs/common';
+import { StatusPubSubService } from '../pub-sub/Status-Pub-Sub.service';
 
 @Injectable()
 export class ManualNodeExecutor extends BaseNodeExecutor {
   constructor(
     /**
-     * injecting ManualPubSubService to ensure it's available for use in the executor
+     * injecting StatusPubSubService to ensure it's available for use in the executor
      */
-    private readonly manualPubSubService: ManualPubSubService,
+    private readonly statusPubSubService: StatusPubSubService,
   ) {
     super(ManualNodeExecutor.name);
   }
@@ -20,12 +20,12 @@ export class ManualNodeExecutor extends BaseNodeExecutor {
     context: ExecutionContextDto,
   ): Promise<void> {
     // No specific execution logic for manual nodes
-    this.manualPubSubService.publish({
+    await this.statusPubSubService.publish({
       nodeId: node.id,
       status: 'loading',
       createdAt: new Date(),
       workflowId: node.workflowId,
-    });
+    }, context.userId);
 
     /**
      * simulating some processing time for the manual node execution
@@ -33,12 +33,12 @@ export class ManualNodeExecutor extends BaseNodeExecutor {
      */
     await this.sleep(5000);
 
-    this.manualPubSubService.publish({
+    await this.statusPubSubService.publish({
       nodeId: node.id,
       status: 'success',
       createdAt: new Date(),
       workflowId: node.workflowId,
-    });
+    }, context.userId);
 
     return context.currentNodeInput;
   }
