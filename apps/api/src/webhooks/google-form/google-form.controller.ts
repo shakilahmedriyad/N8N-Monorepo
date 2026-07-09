@@ -3,6 +3,7 @@ import {
   Controller,
   Param,
   Post,
+  RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from 'src/database/providers/database/database.service';
@@ -22,34 +23,47 @@ export class GoogleFormController {
     @Body() body: any,
     @Param('workflowId') workflowId: string,
   ) {
-    const result = await this.databaseService.user.findFirst({
-      where: {
-        workflow: {
-          some: {
-            id: workflowId,
-          },
-        },
-      },
-      include: {
-        sessions: true,
-      },
-    });
-
-    if (!result) {
-      throw new UnauthorizedException();
-    }
-
-    const sessionEntity = result.sessions[0];
-    if (!sessionEntity) {
-      throw new UnauthorizedException();
-    }
-
-    const session: UserSession = {
-      session: sessionEntity,
-      user: result,
-    };
-
+    const session = await this.getUserSessionFormWorkflowId(workflowId);
     this.workflowService.execute({ workflowId, context: body }, session);
     return { message: 'started executing nodes shortly', workflowId };
+  }
+
+  /**
+   *
+   * @param workflowId
+   * @returns user session
+   */
+  private async getUserSessionFormWorkflowId(workflowId: string) {
+    try {
+      const result = await this.databaseService.user.findFirst({
+        where: {
+          workflow: {
+            some: {
+              id: workflowId,
+            },
+          },
+        },
+        include: {
+          sessions: true,
+        },
+      });
+
+      if (!result) {
+        throw new UnauthorizedException();
+      }
+
+      const sessionEntity = result.sessions[0];
+      if (!sessionEntity) {
+        throw new UnauthorizedException();
+      }
+
+      const session: UserSession = {
+        session: sessionEntity,
+        user: result,
+      };
+      return session;
+    } catch (error) {
+      throw new RequestTimeoutException();
+    }
   }
 }
