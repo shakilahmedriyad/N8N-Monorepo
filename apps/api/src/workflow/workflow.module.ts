@@ -37,5 +37,6 @@ import { FeatureModule } from 'src/feature/feature.module';
     WorkflowProcessor,
     HttpNodeExecutor,
   ],
+  exports: [WorkflowService],
 })
 export class WorkflowModule {}

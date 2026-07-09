@@ -12,7 +12,9 @@ import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { AuthMiddleware } from './common/middleware/auth.middlware';
 import { FeatureModule } from './feature/feature.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 import superjson from 'superjson';
+import { GoogleFormModule } from './webhooks/google-form/google-form.module';
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
@@ -60,6 +62,8 @@ const ENV = process.env.NODE_ENV;
       adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
     FeatureModule,
+    WebhooksModule,
+    GoogleFormModule,
   ],
   controllers: [],
   providers: [TrpcContextProvider, AuthMiddleware],

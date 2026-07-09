@@ -176,13 +176,13 @@ export default function SignInForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex w-full">
             <Button
               type="button"
               variant="outline"
               onClick={handleGoogleSignIn}
               disabled={isLoading}
-              className="h-11"
+              className="h-11 w-full"
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path

@@ -15,6 +15,15 @@ export class WorkflowProcessor extends WorkerHost {
     super();
   }
 
+  private isEmptyObject(obj: Object) {
+    return (
+      !!obj &&
+      typeof obj === 'object' &&
+      Object.keys(obj).length === 0 &&
+      obj.constructor === Object
+    );
+  }
+
   async process(job: Job): Promise<any> {
     const workflow = await this.databaseService.workflow.findUniqueOrThrow({
       where: {
@@ -40,10 +49,17 @@ export class WorkflowProcessor extends WorkerHost {
         userId: job.data.userId,
         previousNodeOutputs: response,
         workflowId: job.data.workflowId,
-        currentNodeInput: nodeData || {},
-        variable: nodeData?.variable as string,
+        currentNodeInput: this.isEmptyObject(nodeData)
+          ? job.data.context || {}
+          : nodeData,
+        variable: this.isEmptyObject(nodeData)
+          ? job.data.context.variable
+          : (nodeData?.variable as string),
       });
     }
+
+    console.log(response);
+
     return response;
   }
 

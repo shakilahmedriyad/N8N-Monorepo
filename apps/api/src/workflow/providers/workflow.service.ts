@@ -12,6 +12,7 @@ import { GetWorkflowProvider } from './get-workflow.provider';
 import { GetWorkflowByIdProvider } from './get-workflow-by-id.provider';
 import { SaveWorkflowNodesProvider } from './save-workflow-nodes.provider';
 import { WorkflowExecutionProvider } from './workflow-execution.provider';
+import { ExecuteWorkflowDto } from '../dtos/execute-workflow.dto';
 
 /**
  * Managing workflow business logic
@@ -122,10 +123,7 @@ export class WorkflowService {
     }
   }
 
-  public async execute(
-    executeDto: { workflowId: string },
-    session: UserSession,
-  ) {
+  public async execute(executeDto: ExecuteWorkflowDto, session: UserSession) {
     return this.workflowExecutionProvider.execute(executeDto, session);
   }
 }

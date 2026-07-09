@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { Queue } from 'bullmq';
+import { ExecuteWorkflowDto } from '../dtos/execute-workflow.dto';
 
 @Injectable()
 export class WorkflowExecutionProvider {
@@ -10,15 +11,13 @@ export class WorkflowExecutionProvider {
     private readonly workflowQueue: Queue,
   ) {}
 
-  public async execute(
-    executeDto: { workflowId: string },
-    session: UserSession,
-  ) {
+  public async execute(executeDto: ExecuteWorkflowDto, session: UserSession) {
     this.workflowQueue.add(
       'execute-workflow',
       {
         workflowId: executeDto.workflowId,
         userId: session.user.id,
+        context: executeDto.context,
       },
       {
         attempts: 3, // Retry 3 times on failure
