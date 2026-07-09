@@ -21,6 +21,7 @@ import * as z from 'zod';
 import { WorkflowService } from './providers/workflow.service';
 import { type UserSession } from '@thallesp/nestjs-better-auth';
 import { StatusPubSubService } from 'src/feature/pub-sub/Status-Pub-Sub.service';
+import { RequestTimeoutException } from '@nestjs/common';
 
 /**
  * trpc router for workflows
@@ -187,7 +188,7 @@ export class WorkflowRouter {
         }
       }
     } catch (error) {
-      console.error('Error in nodeStatus subscription:', error);
+      throw new RequestTimeoutException();
     }
   }
 }
