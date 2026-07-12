@@ -6,12 +6,14 @@ import { CircleCheckIcon, CircleXIcon, Loader2Icon } from "lucide-react";
 
 export interface BaseNodeProps extends ComponentProps<"div"> {
   status?: NodeStatus;
+  statusPosition?: "left" | "right";
 }
 
 export function BaseNode({
   className,
   children,
   status,
+  statusPosition = "right",
   ...props
 }: BaseNodeProps) {
   return (
@@ -26,17 +28,34 @@ export function BaseNode({
     >
       {children}
       {status == "error" && (
-        <div className="absolute right-0.5 bottom-0.5">
+        <div
+          className={cn(
+            "absolute  bottom-0.5",
+            statusPosition == "left" ? "left-0.5" : "right-0.5",
+          )}
+        >
           <CircleXIcon className="size-2.5 text-red-600" />
         </div>
       )}
       {status == "loading" && (
-        <div className="absolute -right-0.5 -bottom-0.5">
+        <div
+          className={cn(
+            "absolute  ",
+            statusPosition == "left"
+              ? "left-1.5 -bottom-1"
+              : "-right-0.5 -bottom-0.5",
+          )}
+        >
           <Loader2Icon className="size-2.5 text-[#2A43E9] animate-spin" />
         </div>
       )}
       {status == "success" && (
-        <div className="absolute right-0.5 bottom-0.5">
+        <div
+          className={cn(
+            "absolute  bottom-0.5",
+            statusPosition == "left" ? "left-0.5" : "right-0.5",
+          )}
+        >
           <CircleCheckIcon className="size-2.5 text-emerald-600" />
         </div>
       )}

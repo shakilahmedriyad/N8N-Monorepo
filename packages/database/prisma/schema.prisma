@@ -94,6 +94,7 @@ enum NodeType {
   MANUAL_TRIGGER
   HTTP_TRIGGER
   GOOGLE_FORM_TRIGGER
+  DISCORD_TRIGGER
 }
 
 model Node {

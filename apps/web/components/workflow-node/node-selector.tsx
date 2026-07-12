@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Node, useReactFlow } from "@xyflow/react";
 import { toast } from "sonner";
 import { createId } from "@paralleldrive/cuid2";
+import DiscordIcon from "@/icons/DiscordIcon";
 
 type NodeTypes = {
   type: NodeType;
@@ -40,6 +41,12 @@ const triggerNodes: NodeTypes[] = [
     description: "Start this workflow via Google Form submission",
     icons: <FileTextIcon className="h-5 w-5" />,
     type: NodeType.GOOGLE_FORM_TRIGGER,
+  },
+  {
+    label: "Discord Notification",
+    description: "Send notification to a discord channel",
+    icons: <DiscordIcon className="h-5 w-5" />,
+    type: NodeType.DISCORD_TRIGGER,
   },
   {
     label: "HTTP Trigger",

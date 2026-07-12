@@ -163,7 +163,6 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
       return {
         status: response.status,
         statusText: response.statusText,
-        // headers: response.headers,
         data: response.data,
       };
     } catch (error) {
