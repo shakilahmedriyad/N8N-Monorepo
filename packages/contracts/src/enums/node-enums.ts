@@ -4,6 +4,7 @@ export const NodeType = {
   HTTP_TRIGGER: "HTTP_TRIGGER",
   GOOGLE_FORM_TRIGGER: "GOOGLE_FORM_TRIGGER",
   DISCORD_TRIGGER: "DISCORD_TRIGGER",
+  GEMINI_TRIGGER: "GEMINI_TRIGGER",
 } as const;
 
 export type NodeType = keyof typeof NodeType;

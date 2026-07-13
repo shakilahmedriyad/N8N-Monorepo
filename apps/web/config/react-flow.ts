@@ -5,6 +5,7 @@ import { HttpExecutionNode } from "@/components/react-flow-nodes/execution-nodes
 import { ManualTriggerNode } from "@/components/react-flow-nodes/Manual-nodes/manual-trigger/manual-trigge";
 import { GoogleFormTriggerNode } from "@/components/react-flow-nodes/google-form-nodes/google-form-trigger/google-form";
 import { DiscordTriggerNode } from "@/components/react-flow-nodes/discord-nodes/discord-trigger/discord-trigge";
+import { GeminiExecutionNode } from "@/components/react-flow-nodes/execution-nodes/gemini-nodes/gemini-node";
 
 export const nodeComponents = {
   [NodeType.INITIAL]: InitialNode,
@@ -12,6 +13,7 @@ export const nodeComponents = {
   [NodeType.MANUAL_TRIGGER]: ManualTriggerNode,
   [NodeType.GOOGLE_FORM_TRIGGER]: GoogleFormTriggerNode,
   [NodeType.DISCORD_TRIGGER]: DiscordTriggerNode,
+  [NodeType.GEMINI_TRIGGER]: GeminiExecutionNode,
 } as const satisfies NodeTypes;
 
 export type RegisterNodes = keyof typeof nodeComponents;

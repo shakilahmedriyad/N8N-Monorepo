@@ -95,6 +95,7 @@ enum NodeType {
   HTTP_TRIGGER
   GOOGLE_FORM_TRIGGER
   DISCORD_TRIGGER
+  GEMINI_TRIGGER
 }
 
 model Node {
