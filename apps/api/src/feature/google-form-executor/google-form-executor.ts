@@ -20,15 +20,7 @@ export class GoogleFormNodeExecutor extends BaseNodeExecutor {
     context: ExecutionContextDto,
   ): Promise<void> {
     // No specific execution logic for manual nodes
-    await this.statusPubSubService.publish(
-      {
-        nodeId: node.id,
-        status: 'loading',
-        createdAt: new Date(),
-        workflowId: node.workflowId,
-      },
-      context.userId,
-    );
+    await this.statusPubSubService.publishLoading(node.id, context.userId);
 
     /**
      * simulating some processing time for the manual node execution
@@ -36,15 +28,7 @@ export class GoogleFormNodeExecutor extends BaseNodeExecutor {
      */
     await this.sleep(5000);
 
-    await this.statusPubSubService.publish(
-      {
-        nodeId: node.id,
-        status: 'success',
-        createdAt: new Date(),
-        workflowId: node.workflowId,
-      },
-      context.userId,
-    );
+    await this.statusPubSubService.publishSuccess(node.id, context.userId);
 
     return context.currentNodeInput;
   }

@@ -35,42 +35,18 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     const data = node.data as unknown as HttpNodeData;
 
     if (!data.url) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: node.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException('Resolved URL is required');
     }
 
     if (!data.method) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: node.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException('HTTP method is required');
     }
 
     const validMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
     if (!validMethods.includes(data.method)) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: node.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException(
         `Invalid HTTP method. Must be one of: ${validMethods.join(', ')}`,
       );
@@ -79,15 +55,7 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     try {
       new URL(data.url);
     } catch (error) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: node.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException('Invalid URL format');
     }
   }
@@ -97,15 +65,7 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     context: ExecutionContextDto,
   ): Promise<any> {
     /// sending the loading event
-    await this.statusPubSubService.publish(
-      {
-        nodeId: node.id,
-        status: 'loading',
-        createdAt: new Date(),
-        workflowId: context.workflowId,
-      },
-      context.userId,
-    );
+    await this.statusPubSubService.publishLoading(node.id, context.userId);
 
     await this.sleep(5000); // Simulate some processing time
 
@@ -116,19 +76,9 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     const headers = this.resolveInput(data.headers, context);
     const queryParams = this.resolveInput(data.queryParams, context);
     if (!context.variable) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: context.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException('API variable is required');
     }
-
-    this.logger.log(`Making ${data.method} request to: ${url}`);
 
     const config: AxiosRequestConfig = {
       method: data.method,
@@ -151,30 +101,14 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     try {
       const response = await axios(config);
       // later we will add status update over here
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'success',
-          createdAt: new Date(),
-          workflowId: context.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishSuccess(node.id, context.userId);
       return {
         status: response.status,
         statusText: response.statusText,
         data: response.data,
       };
     } catch (error) {
-      await this.statusPubSubService.publish(
-        {
-          nodeId: node.id,
-          status: 'error',
-          createdAt: new Date(),
-          workflowId: context.workflowId,
-        },
-        context.userId,
-      );
+      await this.statusPubSubService.publishError(node.id, context.userId);
       if (axios.isAxiosError(error)) {
         if (error.response) {
           this.logger.error(

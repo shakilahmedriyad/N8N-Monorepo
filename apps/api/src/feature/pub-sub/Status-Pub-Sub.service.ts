@@ -16,4 +16,37 @@ export class StatusPubSubService extends RedisPubSubService {
     );
     return this.subscriber;
   }
+
+  public async publishLoading(nodeId: string, userId: string) {
+    this.publish(
+      {
+        nodeId: nodeId,
+        status: 'loading',
+        createdAt: new Date(),
+      },
+      userId,
+    );
+  }
+
+  public async publishError(nodeId: string, userId: string) {
+    this.publish(
+      {
+        nodeId: nodeId,
+        status: 'error',
+        createdAt: new Date(),
+      },
+      userId,
+    );
+  }
+
+  public async publishSuccess(nodeId: string, userId: string) {
+    this.publish(
+      {
+        nodeId: nodeId,
+        status: 'success',
+        createdAt: new Date(),
+      },
+      userId,
+    );
+  }
 }
