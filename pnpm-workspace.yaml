@@ -2,9 +2,11 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
+  '@google/genai': false
   '@prisma/client': false
   '@prisma/engines': false
   msgpackr-extract: false
   prisma: false
+  protobufjs: false
   sharp: false
   unrs-resolver: false

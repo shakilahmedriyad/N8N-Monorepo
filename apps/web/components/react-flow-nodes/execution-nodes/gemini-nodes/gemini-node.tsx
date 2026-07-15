@@ -4,14 +4,16 @@ import { memo, useState } from "react";
 import BaseExecutionNode from "../Base-execution-node/base-execution-node";
 
 import useNodeStatusStore from "@/store/node-status-store";
-import GeminiExecutionDialog from "./geminiExecutionDialog";
 import GeminiIcon from "@/icons/GeminiIcon";
+import { GeminiExecutionDialog } from "./geminiExecutionDialog";
 
 type GeminiExecutionNodeProps = {
-  url?: string;
-  method?: "GET" | "PATCH" | "POST" | "DELETE";
-  body?: string;
-  [key: string]: unknown;
+  apiKey: string;
+  model: string;
+  prompt: string;
+  temperature: number;
+  maxTokens: number;
+  variableName: string;
 };
 
 type NodePropsType = Node<GeminiExecutionNodeProps>;

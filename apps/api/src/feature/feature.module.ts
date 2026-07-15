@@ -6,6 +6,7 @@ import { ManualNodeExecutor } from './manual-executor/manual.executor';
 import { ExecutionService } from './provider/execution.service.ts/execution.service';
 import { GoogleFormNodeExecutor } from './google-form-executor/google-form-executor';
 import { DiscordNodeExecutor } from './discord-executor/discord-executor';
+import { GeminiNodeExecutor } from './gemini-executor/gemini-executor';
 
 @Module({
   imports: [],
@@ -21,6 +22,7 @@ import { DiscordNodeExecutor } from './discord-executor/discord-executor';
     GoogleFormNodeExecutor,
     ExecutionService,
     DiscordNodeExecutor,
+    GeminiNodeExecutor,
   ],
   exports: [
     RedisPubSubService,

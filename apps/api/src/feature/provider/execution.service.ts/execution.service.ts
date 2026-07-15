@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { NodeModel } from '@repo/database';
 import { ExecutionContextDto } from 'src/feature/base-executor/base-executor.dto';
 import { DiscordNodeExecutor } from 'src/feature/discord-executor/discord-executor';
+import { GeminiNodeExecutor } from 'src/feature/gemini-executor/gemini-executor';
 import { GoogleFormNodeExecutor } from 'src/feature/google-form-executor/google-form-executor';
 import { HttpNodeExecutor } from 'src/feature/http-executor/http.executor';
 import { ManualNodeExecutor } from 'src/feature/manual-executor/manual.executor';
@@ -25,6 +26,11 @@ export class ExecutionService {
      * injecting Discord Node executor
      */
     private readonly discordNodeExecutor: DiscordNodeExecutor,
+
+    /**
+     * injecting Discord Node executor
+     */
+    private readonly geminiNodeExecutor: GeminiNodeExecutor,
   ) {}
 
   public async executeNode(
@@ -40,6 +46,8 @@ export class ExecutionService {
         return this.googleFormNodeExecutor.execute(node, context);
       case 'DISCORD_TRIGGER':
         return this.discordNodeExecutor.execute(node, context);
+      case 'GEMINI_TRIGGER':
+        return this.geminiNodeExecutor.execute(node, context);
       default:
         throw new Error(`Unsupported node type: ${node.type}`);
     }
