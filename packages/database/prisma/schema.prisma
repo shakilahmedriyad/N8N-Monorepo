@@ -142,11 +142,12 @@ model Execution {
   workflow    Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   status      ExecutionStatus @default(PENDING)
   nodeResults Json?
-  error       String?         @db.Text
+  error       Json?
+  errorStack  String?         @db.Text
   startedAt   DateTime?
   finishedAt  DateTime?
   createdAt   DateTime        @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime        @updatedAt
 
   @@index([workflowId])
   @@index([status])

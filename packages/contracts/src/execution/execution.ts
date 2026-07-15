@@ -2,8 +2,10 @@ import * as z from "zod";
 
 export const ExecutionSchema = z.object({
   id: z.string(),
-  nodeResults: z.json().optional(),
-  error: z.string().optional(),
+  status: z.string(),
+  nodeResults: z.json().nullable(),
+  error: z.json().nullable(),
+  errorStack: z.string().nullable(),
   startedAt: z.date(),
   finishedAt: z.date(),
   createdAt: z.date(),
@@ -11,6 +13,3 @@ export const ExecutionSchema = z.object({
 });
 
 export type ExecutionType = z.infer<typeof ExecutionSchema>;
-
-
-

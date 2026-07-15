@@ -60,6 +60,7 @@ ${JSON.stringify(context.previousNodeOutputs, null, 2)}
        * publishing error of process
        */
       await this.statusPubSubService.publishLoading(node.id, context.userId);
+      throw error;
     }
   }
 }

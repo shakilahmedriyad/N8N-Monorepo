@@ -3,7 +3,7 @@ import { RedisPubSubService } from './redis/redis.service';
 import { StatusPubSubService } from './pub-sub/Status-Pub-Sub.service';
 import { HttpNodeExecutor } from './http-executor/http.executor';
 import { ManualNodeExecutor } from './manual-executor/manual.executor';
-import { ExecutionService } from './provider/execution.service.ts/execution.service';
+import { ExecutorService } from './provider/executor/executor.service';
 import { GoogleFormNodeExecutor } from './google-form-executor/google-form-executor';
 import { DiscordNodeExecutor } from './discord-executor/discord-executor';
 import { GeminiNodeExecutor } from './gemini-executor/gemini-executor';
@@ -20,7 +20,7 @@ import { GeminiNodeExecutor } from './gemini-executor/gemini-executor';
     HttpNodeExecutor,
     ManualNodeExecutor,
     GoogleFormNodeExecutor,
-    ExecutionService,
+    ExecutorService,
     DiscordNodeExecutor,
     GeminiNodeExecutor,
   ],
@@ -29,7 +29,7 @@ import { GeminiNodeExecutor } from './gemini-executor/gemini-executor';
     StatusPubSubService,
     HttpNodeExecutor,
     ManualNodeExecutor,
-    ExecutionService,
+    ExecutorService,
   ],
 })
 export class FeatureModule {}

@@ -30,7 +30,7 @@ export class GeminiNodeExecutor extends BaseNodeExecutor {
 
       const response = await ai.models.generateContent({
         model: data.model,
-        contents: data.prompt, 
+        contents: data.prompt,
         config: {
           temperature: data.temperature,
         },
@@ -43,9 +43,20 @@ export class GeminiNodeExecutor extends BaseNodeExecutor {
         response: response.text,
       };
     } catch (error) {
-      console.log(error);
       this.statusPubSubService.publishError(node.id, context.userId);
-      throw new RequestTimeoutException();
+      throw this.serializeError(error);
     }
+  }
+
+  private serializeError(error: unknown) {
+    return {
+      //@ts-expect-error type error
+      name: error.name,
+      //@ts-expect-error type error
+      message: error.message,
+      status: (error as any).status,
+      error: (error as any).error,
+      details: (error as any).details,
+    };
   }
 }

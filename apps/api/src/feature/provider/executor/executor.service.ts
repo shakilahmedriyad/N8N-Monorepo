@@ -8,7 +8,7 @@ import { HttpNodeExecutor } from 'src/feature/http-executor/http.executor';
 import { ManualNodeExecutor } from 'src/feature/manual-executor/manual.executor';
 
 @Injectable()
-export class ExecutionService {
+export class ExecutorService {
   constructor(
     /**
      * injecting HttpNodeExecutor to ensure it's available for use in the service
@@ -37,19 +37,23 @@ export class ExecutionService {
     node: NodeModel,
     context: ExecutionContextDto,
   ): Promise<any> {
-    switch (node.type) {
-      case 'HTTP_TRIGGER':
-        return this.httpNodeExecutor.execute(node, context);
-      case 'MANUAL_TRIGGER':
-        return this.manualNodeExecutor.execute(node, context);
-      case 'GOOGLE_FORM_TRIGGER':
-        return this.googleFormNodeExecutor.execute(node, context);
-      case 'DISCORD_TRIGGER':
-        return this.discordNodeExecutor.execute(node, context);
-      case 'GEMINI_TRIGGER':
-        return this.geminiNodeExecutor.execute(node, context);
-      default:
-        throw new Error(`Unsupported node type: ${node.type}`);
+    try {
+      switch (node.type) {
+        case 'HTTP_TRIGGER':
+          return this.httpNodeExecutor.execute(node, context);
+        case 'MANUAL_TRIGGER':
+          return this.manualNodeExecutor.execute(node, context);
+        case 'GOOGLE_FORM_TRIGGER':
+          return this.googleFormNodeExecutor.execute(node, context);
+        case 'DISCORD_TRIGGER':
+          return this.discordNodeExecutor.execute(node, context);
+        case 'GEMINI_TRIGGER':
+          return this.geminiNodeExecutor.execute(node, context);
+        default:
+          throw new Error(`Unsupported node type: ${node.type}`);
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }

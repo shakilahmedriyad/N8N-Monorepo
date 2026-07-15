@@ -24,10 +24,10 @@ export class ExecutionRouter {
     input: PAGINATION_SCHEMA,
     output: createPaginationResponseSchema(ExecutionSchema),
   })
-  public getExecutions(
+  public async getExecutions(
     @Input() paginationDto: PaginationDto,
     @Ctx() session: UserSession,
   ) {
-    return this.executionService.getExecution(paginationDto, session);
+    return await this.executionService.getExecution(paginationDto, session);
   }
 }

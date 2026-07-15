@@ -109,25 +109,7 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
       };
     } catch (error) {
       await this.statusPubSubService.publishError(node.id, context.userId);
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          this.logger.error(
-            `HTTP request failed with status: ${error.response.status}`,
-          );
-          throw new BadRequestException(
-            `HTTP ${error.response.status}: ${error.response.statusText}`,
-          );
-        } else if (error.request) {
-          this.logger.error('No response received from server');
-          throw new RequestTimeoutException('No response from server');
-        }
-
-        this.logger.error('Error setting up request:', error.message);
-        throw new Error(`Request setup failed: ${error.message}`);
-      }
-
-      this.logger.error('Unexpected error during HTTP request', error);
-      throw new Error('Unexpected error during HTTP request');
+      throw error;
     }
   }
 }

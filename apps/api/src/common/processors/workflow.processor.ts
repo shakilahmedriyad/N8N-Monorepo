@@ -3,13 +3,15 @@ import { BadGatewayException, BadRequestException } from '@nestjs/common';
 import { ConnectionModel, NodeModel } from '@repo/database';
 import { Job } from 'bullmq';
 import { DatabaseService } from 'src/database/providers/database/database.service';
-import { ExecutionService } from 'src/feature/provider/execution.service.ts/execution.service';
+import { ExecutionService } from 'src/execution/providers/execution.service';
+import { ExecutorService } from 'src/feature/provider/executor/executor.service';
 import toposort from 'toposort';
 
 @Processor('workflow')
 export class WorkflowProcessor extends WorkerHost {
   constructor(
     private readonly databaseService: DatabaseService,
+    private readonly executorService: ExecutorService,
     private readonly executionService: ExecutionService,
   ) {
     super();
@@ -26,6 +28,11 @@ export class WorkflowProcessor extends WorkerHost {
 
   async process(job: Job): Promise<any> {
     try {
+      /**
+       * updating the database of execution
+       */
+      await this.executionService.startedExecution(job.data.executionId);
+
       const workflow = await this.databaseService.workflow.findUniqueOrThrow({
         where: {
           id: job.data.workflowId,
@@ -46,7 +53,7 @@ export class WorkflowProcessor extends WorkerHost {
 
       for (const node of executionNodes) {
         const nodeData = node.data as any;
-        response = await this.executionService.executeNode(node, {
+        response = await this.executorService.executeNode(node, {
           userId: job.data.userId,
           previousNodeOutputs: response,
           workflowId: job.data.workflowId,
@@ -59,11 +66,17 @@ export class WorkflowProcessor extends WorkerHost {
         });
       }
 
-      console.log(response);
+      await this.executionService.successExecution(
+        job.data.executionId,
+        response,
+      );
 
       return response;
     } catch (error) {
-      throw new BadRequestException();
+      await this.executionService.errorExecution(
+        job.data.executionId,
+        error as unknown as object,
+      );
     }
   }
 
@@ -96,7 +109,6 @@ export class WorkflowProcessor extends WorkerHost {
 
       return executionOrder as NodeModel[];
     } catch (error) {
-      console.log(error);
       throw new BadGatewayException('Workflow contains circular dependency');
     }
   }

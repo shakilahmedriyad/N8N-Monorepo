@@ -13,11 +13,13 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { HttpNodeExecutor } from 'src/feature/http-executor/http.executor';
 import { FeatureModule } from 'src/feature/feature.module';
+import { ExecutionModule } from 'src/execution/execution.module';
 
 @Module({
   imports: [
     DatabaseModule,
     FeatureModule,
+    ExecutionModule,
     BullModule.registerQueue({
       name: 'workflow',
     }),

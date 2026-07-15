@@ -56,10 +56,7 @@ export abstract class BaseNodeExecutor {
     } catch (error) {
       this.logger.error(`Node ${node.name} failed:`, error);
 
-      return {
-        success: false,
-        error: JSON.stringify(error),
-      };
+      throw error;
     }
   }
 

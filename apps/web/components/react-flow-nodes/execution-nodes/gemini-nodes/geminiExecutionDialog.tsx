@@ -39,14 +39,14 @@ type GeminiNodeDialogProps = {
     prompt?: string;
     temperature?: number;
     maxTokens?: number;
-    variableName?: string;
+    variable?: string;
   };
 };
 
 const GEMINI_MODELS = [
   { value: "gemini-pro", label: "Gemini Pro" },
-  { value: "gemini-pro-vision", label: "Gemini Pro Vision" },
-  { value: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
+  { value: "gemini-2.5-flash", label: "Gemini 2.5 flash" },
+  { value: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash-Lite" },
   { value: "gemini-3.5-flash", label: "Gemini 3.5 Flash" },
 ];
 
@@ -63,7 +63,7 @@ export function GeminiExecutionDialog({
     prompt: defaultValues?.prompt || "",
     temperature: defaultValues?.temperature || 0.7,
     maxTokens: defaultValues?.maxTokens || 1024,
-    variable: defaultValues?.variableName || "",
+    variable: defaultValues?.variable || "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
