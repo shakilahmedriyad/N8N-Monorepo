@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { TRPCModule } from 'nestjs-trpc';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WorkflowModule } from './workflow/workflow.module';
-import { UserModule } from './user/user.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@repo/auth/auth';
 import { BullModule } from '@nestjs/bullmq';
@@ -15,6 +14,7 @@ import { FeatureModule } from './feature/feature.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import superjson from 'superjson';
 import { GoogleFormModule } from './webhooks/google-form/google-form.module';
+import { ExecutionModule } from './execution/execution.module';
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
@@ -24,7 +24,6 @@ const ENV = process.env.NODE_ENV;
 
     AuthModule.forRoot({ auth }),
     WorkflowModule,
-    UserModule,
 
     /**
      * initialize Config module
@@ -64,6 +63,7 @@ const ENV = process.env.NODE_ENV;
     FeatureModule,
     WebhooksModule,
     GoogleFormModule,
+    ExecutionModule,
   ],
   controllers: [],
   providers: [TrpcContextProvider, AuthMiddleware],

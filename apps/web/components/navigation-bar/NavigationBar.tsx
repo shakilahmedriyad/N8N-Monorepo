@@ -25,12 +25,6 @@ export default function NavigationBar({ user }: { user: any }) {
       icon: <BlocksIcon />,
     },
     {
-      pathname: "/credentials",
-      label: "Credentials",
-      isActive: pathname === "/credentials",
-      icon: <DatabaseIcon />,
-    },
-    {
       pathname: "/executions",
       label: "Executions",
       isActive: pathname === "/executions",

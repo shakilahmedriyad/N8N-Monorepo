@@ -59,9 +59,11 @@ export class WorkflowProcessor extends WorkerHost {
         });
       }
 
+      console.log(response);
+
       return response;
     } catch (error) {
-      console.log(error);
+      throw new BadRequestException();
     }
   }
 

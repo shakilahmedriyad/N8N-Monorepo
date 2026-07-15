@@ -17,6 +17,7 @@ const publicProcedure = t.procedure;
 import {
   PAGINATION_SCHEMA,
   createPaginationResponseSchema,
+  ExecutionSchema,
   WorkflowSchema,
   GetWorkflowByIdSchema,
   GetWorkflowByIdOutputSchema,
@@ -26,10 +27,11 @@ import {
 } from "@repo/contracts";
 
 export const appRouter = t.router({
-  user: t.router({
-    getUser: publicProcedure.query(
-      async () => "PLACEHOLDER_DO_NOT_REMOVE" as any,
-    ),
+  execution: t.router({
+    getExecutions: publicProcedure
+      .input(PAGINATION_SCHEMA)
+      .output(createPaginationResponseSchema(ExecutionSchema))
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
   }),
   workflow: t.router({
     getWorkflows: publicProcedure

@@ -302,10 +302,8 @@ export function GeminiExecutionDialog({
               id="variable-name"
               placeholder="e.g., geminiResponse"
               value={formData.variable}
-              onChange={(e) =>
-                handleInputChange("variableName", e.target.value)
-              }
-              className={errors.variableName ? "border-destructive" : ""}
+              onChange={(e) => handleInputChange("variable", e.target.value)}
+              className={errors.variable ? "border-destructive" : ""}
             />
             {errors.variableName && (
               <p className="text-xs text-destructive mt-1">

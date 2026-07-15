@@ -87,6 +87,7 @@ model Workflow {
   connections Connection[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  executions  Execution[]
 }
 
 enum NodeType {
@@ -125,4 +126,29 @@ model Connection {
   updatedAt  DateTime @updatedAt
 
   @@unique([sourceId, targetId])
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+model Execution {
+  id          String          @id @default(cuid())
+  workflowId  String
+  workflow    Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status      ExecutionStatus @default(PENDING)
+  nodeResults Json?
+  error       String?         @db.Text
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime
+
+  @@index([workflowId])
+  @@index([status])
+  @@index([createdAt])
 }

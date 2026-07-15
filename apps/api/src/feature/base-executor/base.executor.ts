@@ -37,10 +37,21 @@ export abstract class BaseNodeExecutor {
       await this.validate(node, context);
       const output = await this.executeNode(node, context);
 
+      /**
+       * if variable is set then set the output to variable or escape that
+       */
+      if (context.variable)
+        return {
+          success: true,
+          ...context.previousNodeOutputs,
+          [context.variable]: output,
+        };
+      /**
+       * no variable set so just escape the values
+       */
       return {
         success: true,
         ...context.previousNodeOutputs,
-        [context.variable]: output,
       };
     } catch (error) {
       this.logger.error(`Node ${node.name} failed:`, error);
