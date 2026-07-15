@@ -64,7 +64,6 @@ export function DiscordTriggerDialog({
   });
 
   const handleFormSubmit = (data: DiscordTriggerFormData) => {
-    console.log(id);
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id !== id) return node;
