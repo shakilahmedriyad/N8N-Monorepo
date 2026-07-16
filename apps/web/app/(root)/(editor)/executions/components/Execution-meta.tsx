@@ -2,11 +2,13 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Clock, Zap } from "lucide-react";
 
 type Props = {
-  startedAt: Date;
+  startedAt: Date | null;
   finishedAt?: Date | null;
 };
 
-function formatDuration(start: Date, end?: Date | null) {
+function formatDuration(start: Date | null, end?: Date | null) {
+  if (!start) return "-";
+
   if (!end) {
     const now = new Date();
     const seconds = Math.floor((now.getTime() - start.getTime()) / 1000);
@@ -22,7 +24,9 @@ function formatDuration(start: Date, end?: Date | null) {
   return `${minutes}m ${remainingSeconds}s`;
 }
 
-function formatDateTime(date: Date) {
+function formatDateTime(date: Date | null) {
+  if (!date) return "-";
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -77,8 +81,8 @@ export function ExecutionMeta({ startedAt, finishedAt }: Props) {
 
       <Card className="p-4">
         <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-950">
-            <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+          <div className="rounded-lg ">
+            <Zap className="h-4 w-4 " />
           </div>
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">

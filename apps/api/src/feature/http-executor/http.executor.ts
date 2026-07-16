@@ -67,8 +67,6 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     /// sending the loading event
     await this.statusPubSubService.publishLoading(node.id, context.userId);
 
-    await this.sleep(5000); // Simulate some processing time
-
     const data = node.data as unknown as HttpNodeData;
 
     const url = this.resolveInput(data.url, context);

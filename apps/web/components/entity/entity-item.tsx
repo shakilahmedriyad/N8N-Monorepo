@@ -54,6 +54,7 @@ const statusConfig = {
     icon: Clock,
     label: "Pending",
     variant: "outline" as const,
+    animate: false,
   },
 };
 

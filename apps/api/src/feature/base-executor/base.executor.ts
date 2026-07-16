@@ -23,10 +23,6 @@ export abstract class BaseNodeExecutor {
     context: ExecutionContextDto,
   ): Promise<any>;
 
-  protected sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async execute(
     node: NodeModel,
     context: ExecutionContextDto,

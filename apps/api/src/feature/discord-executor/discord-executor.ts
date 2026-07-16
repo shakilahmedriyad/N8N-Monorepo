@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseNodeExecutor } from '../base-executor/base.executor';
 import { NodeModel } from '@repo/database';
 import { ExecutionContextDto } from '../base-executor/base-executor.dto';
@@ -29,6 +29,9 @@ export class DiscordNodeExecutor extends BaseNodeExecutor {
 
       const data = node.data as unknown as DiscordNodeData;
       const url = this.resolveInput(data.webhookUrl, context);
+      if (!url) {
+        throw new BadRequestException('webhook URL not found');
+      }
       const response = await axios.post(url, {
         username: 'Workflow Engine',
         avatar_url:
@@ -59,7 +62,7 @@ ${JSON.stringify(context.previousNodeOutputs, null, 2)}
       /**
        * publishing error of process
        */
-      await this.statusPubSubService.publishLoading(node.id, context.userId);
+      await this.statusPubSubService.publishError(node.id, context.userId);
       throw error;
     }
   }

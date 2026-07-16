@@ -26,7 +26,6 @@ export class GoogleFormNodeExecutor extends BaseNodeExecutor {
      * simulating some processing time for the manual node execution
      * this is just for demonstration purposes and can be adjusted as needed
      */
-    await this.sleep(5000);
 
     await this.statusPubSubService.publishSuccess(node.id, context.userId);
 
