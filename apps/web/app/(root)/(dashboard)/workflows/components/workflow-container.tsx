@@ -1,4 +1,5 @@
 "use client";
+
 import EntityContainer from "@/components/entity/entity-container";
 import EntityHeader from "@/components/entity/entity-header";
 import EntityItem from "@/components/entity/entity-item";

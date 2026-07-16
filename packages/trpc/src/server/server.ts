@@ -18,6 +18,7 @@ import {
   PAGINATION_SCHEMA,
   createPaginationResponseSchema,
   ExecutionSchema,
+  GetExecutionByIdSchema,
   WorkflowSchema,
   GetWorkflowByIdSchema,
   GetWorkflowByIdOutputSchema,
@@ -31,6 +32,10 @@ export const appRouter = t.router({
     getExecutions: publicProcedure
       .input(PAGINATION_SCHEMA)
       .output(createPaginationResponseSchema(ExecutionSchema))
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    getExecutionById: publicProcedure
+      .input(GetExecutionByIdSchema)
+      .output(ExecutionSchema)
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
   }),
   workflow: t.router({

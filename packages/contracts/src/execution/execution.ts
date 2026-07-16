@@ -13,3 +13,9 @@ export const ExecutionSchema = z.object({
 });
 
 export type ExecutionType = z.infer<typeof ExecutionSchema>;
+
+export const GetExecutionByIdSchema = z.object({
+  executionId: z.string(),
+});
+
+export type GetExecutionByIdDto = z.infer<typeof GetExecutionByIdSchema>;

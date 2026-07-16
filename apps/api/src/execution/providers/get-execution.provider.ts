@@ -1,5 +1,5 @@
 import { Injectable, RequestTimeoutException } from '@nestjs/common';
-import { PaginationDto } from '@repo/contracts';
+import { GetExecutionByIdDto, PaginationDto } from '@repo/contracts';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { DatabaseService } from 'src/database/providers/database/database.service';
 
@@ -11,6 +11,24 @@ export class GetExecutionProvider {
      */
     private readonly databaseService: DatabaseService,
   ) {}
+
+  public async getExecutionById(
+    getExecutionByIdDto: GetExecutionByIdDto,
+    session: UserSession,
+  ) {
+    try {
+      const execution = await this.databaseService.execution.findUniqueOrThrow({
+        where: {
+          id: getExecutionByIdDto.executionId,
+          workflow: { userId: session.user.id },
+        },
+      });
+
+      return execution;
+    } catch (error) {
+      throw new RequestTimeoutException(error);
+    }
+  }
 
   public async getExecution(
     paginationDto: PaginationDto,

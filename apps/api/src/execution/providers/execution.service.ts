@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GetExecutionProvider } from './get-execution.provider';
-import { PaginationDto } from '@repo/contracts';
+import { GetExecutionByIdDto, PaginationDto } from '@repo/contracts';
 import { UserSession } from '@thallesp/nestjs-better-auth';
 import { CRUDExecutionProvider } from './crud-execution.provider';
 
@@ -26,6 +26,16 @@ export class ExecutionService {
       session,
     );
     return res;
+  }
+
+  public async getExecutionById(
+    getExecutionByIdDto: GetExecutionByIdDto,
+    session: UserSession,
+  ) {
+    return this.getExecutionProvider.getExecutionById(
+      getExecutionByIdDto,
+      session,
+    );
   }
 
   /**
