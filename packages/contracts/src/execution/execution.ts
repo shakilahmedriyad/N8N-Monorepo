@@ -2,7 +2,8 @@ import * as z from "zod";
 
 export const ExecutionSchema = z.object({
   id: z.string(),
-  status: z.string(),
+  status: z.enum(["SUCCESS", "FAILED", "RUNNING", "PENDING"]),
+  workflowName: z.string(),
   nodeResults: z.json().nullable(),
   error: z.json().nullable(),
   errorStack: z.string().nullable(),

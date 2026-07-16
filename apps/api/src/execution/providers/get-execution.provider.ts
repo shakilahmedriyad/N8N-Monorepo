@@ -17,14 +17,23 @@ export class GetExecutionProvider {
     session: UserSession,
   ) {
     try {
-      const execution = await this.databaseService.execution.findUniqueOrThrow({
+      const result = await this.databaseService.execution.findUniqueOrThrow({
         where: {
           id: getExecutionByIdDto.executionId,
           workflow: { userId: session.user.id },
         },
+        include: {
+          workflow: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
 
-      return execution;
+      const { workflow, ...execution } = result;
+
+      return { ...execution, workflowName: workflow.name };
     } catch (error) {
       throw new RequestTimeoutException(error);
     }
@@ -40,15 +49,27 @@ export class GetExecutionProvider {
         where: { workflow: { userId: session.user.id } },
       });
 
-      const items = await this.databaseService.execution.findMany({
+      const executions = await this.databaseService.execution.findMany({
         where: {
           workflow: {
             userId: session.user.id,
           },
         },
+        include: {
+          workflow: {
+            select: {
+              name: true,
+            },
+          },
+        },
         take: paginationDto.pageSize,
         skip: (paginationDto.page - 1) * paginationDto.pageSize,
       });
+
+      const items = executions.map(({ workflow, ...execution }) => ({
+        ...execution,
+        workflowName: workflow.name,
+      }));
 
       const totalPage = Math.ceil(totalCount / paginationDto.pageSize);
       const nextPage = totalPage > currentPage ? currentPage + 1 : currentPage;

@@ -49,7 +49,7 @@ export function ExecutionDetails({ executionId }: Props) {
               {execution.nodeResults ? (
                 <JsonTerminal data={execution.nodeResults} />
               ) : (
-                <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-dashed">
+                <div className="flex min-h-100 items-center justify-center rounded-lg border border-dashed">
                   <div className="text-center">
                     <p className="text-sm font-medium">No results yet</p>
                     <p className="text-xs text-muted-foreground">

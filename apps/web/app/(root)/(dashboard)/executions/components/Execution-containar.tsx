@@ -4,12 +4,11 @@ import EntityHeader from "@/components/entity/entity-header";
 import EntityItem from "@/components/entity/entity-item";
 import EntityLists from "@/components/entity/entity-lists";
 import EntityPaginationBar from "@/components/entity/entity-pagination";
-import EntitySearch from "@/components/entity/entity-search";
 import { useSuspenseGetExecutions } from "@/features/execution/hooks/use-get-execution";
 import useCreateWorkflow from "@/features/workflow/hooks/use-create-workflow";
 import { ExecutionType } from "@repo/contracts";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-import { HistoryIcon, WorkflowIcon } from "lucide-react";
+import { HistoryIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 
@@ -40,7 +39,7 @@ export const ExecutionHeader = () => {
   const handleCreateWorkflow = () => {
     createWorkflow.mutate(
       {
-        name: "first workflow",
+        name: "workflow",
       },
       {
         onSuccess(data) {
@@ -70,7 +69,7 @@ export const ExecutionList = ({
       renderItem={(item) => (
         <EntityItem
           id={item.id}
-          title={item.status}
+          title={item.workflowName}
           href={`/executions/${item.id}`}
           image={
             <div>

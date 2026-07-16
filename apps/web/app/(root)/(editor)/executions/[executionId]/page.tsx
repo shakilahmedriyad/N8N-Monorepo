@@ -4,6 +4,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import EntityError from "@/components/entity/entity-error";
 import { Suspense } from "react";
 import EntityLoading from "@/components/entity/entity-loading";
+import ExicutionNavBar from "../components/ExecutionNavBar";
 
 export default async function ExecutionPage({
   params,
@@ -19,7 +20,10 @@ export default async function ExecutionPage({
         <Suspense
           fallback={<EntityLoading description="Loading Executions history" />}
         >
-          <ExecutionDetails executionId={executionId} />
+          <div className="flex flex-col w-full">
+            <ExicutionNavBar executionId={executionId} />
+            <ExecutionDetails executionId={executionId} />
+          </div>
         </Suspense>
       </ErrorBoundary>
     </HydrateClient>

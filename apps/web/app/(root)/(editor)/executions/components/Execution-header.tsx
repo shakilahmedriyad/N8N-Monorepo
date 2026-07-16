@@ -3,7 +3,7 @@ import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 type Props = {
   id: string;
-  status: "SUCCESS" | "FAILED" | "RUNNING";
+  status: "SUCCESS" | "FAILED" | "RUNNING" | "PENDING";
 };
 
 const statusConfig = {
@@ -13,6 +13,7 @@ const statusConfig = {
     bgColor: "bg-green-50 dark:bg-green-950",
     borderColor: "border-green-200 dark:border-green-800",
     label: "Completed Successfully",
+    animate: false,
   },
   FAILED: {
     icon: XCircle,
@@ -20,8 +21,17 @@ const statusConfig = {
     bgColor: "bg-destructive/10",
     borderColor: "border-destructive/20",
     label: "Execution Failed",
+    animate: false,
   },
   RUNNING: {
+    icon: Loader2,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950",
+    borderColor: "border-blue-200 dark:border-blue-800",
+    label: "Running...",
+    animate: true,
+  },
+  PENDING: {
     icon: Loader2,
     color: "text-blue-600",
     bgColor: "bg-blue-50 dark:bg-blue-950",
