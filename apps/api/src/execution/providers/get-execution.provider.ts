@@ -62,6 +62,9 @@ export class GetExecutionProvider {
             },
           },
         },
+        orderBy: {
+          finishedAt: 'desc',
+        },
         take: paginationDto.pageSize,
         skip: (paginationDto.page - 1) * paginationDto.pageSize,
       });

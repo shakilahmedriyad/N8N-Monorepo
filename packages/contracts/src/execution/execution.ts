@@ -7,8 +7,8 @@ export const ExecutionSchema = z.object({
   nodeResults: z.json().nullable(),
   error: z.json().nullable(),
   errorStack: z.string().nullable(),
-  startedAt: z.date(),
-  finishedAt: z.date(),
+  startedAt: z.date().nullable(),
+  finishedAt: z.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

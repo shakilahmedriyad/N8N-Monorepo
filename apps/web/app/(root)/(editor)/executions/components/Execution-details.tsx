@@ -16,7 +16,7 @@ export function ExecutionDetails({ executionId }: Props) {
   const { data: execution } = useSuspenseGetExecutionById(executionId);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
+    <div className="mx-auto max-w-5xl w-full space-y-6 p-6">
       <ExecutionHeader id={execution.id} status={execution.status} />
 
       <ExecutionMeta

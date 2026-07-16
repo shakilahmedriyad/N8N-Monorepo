@@ -4,6 +4,10 @@ import { Check, Copy, Minimize2, Maximize2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import dynamic from "next/dynamic";
+
+// Dynamic import to avoid SSR issues
+const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
 
 type JsonTerminalProps = {
   data: unknown;
@@ -14,19 +18,23 @@ export function JsonTerminal({ data, isError = false }: JsonTerminalProps) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const json = useMemo(() => {
+  const jsonData = useMemo(() => {
     if (typeof data === "string") {
       try {
-        return JSON.stringify(JSON.parse(data), null, 2);
+        return JSON.parse(data);
       } catch {
-        return data;
+        return { error: "Invalid JSON", raw: data };
       }
     }
-    return JSON.stringify(data, null, 2);
+    return data;
   }, [data]);
 
+  const jsonString = useMemo(() => {
+    return JSON.stringify(jsonData, null, 2);
+  }, [jsonData]);
+
   async function handleCopy() {
-    await navigator.clipboard.writeText(json);
+    await navigator.clipboard.writeText(jsonString);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -77,15 +85,23 @@ export function JsonTerminal({ data, isError = false }: JsonTerminalProps) {
       </div>
 
       <ScrollArea className={expanded ? "h-175" : "h-125"}>
-        <pre
-          className={`p-4 text-xs font-mono leading-relaxed ${
-            isError
-              ? "bg-red-50 text-red-900 dark:bg-red-950/50 dark:text-red-200"
-              : "bg-slate-50 text-slate-900 dark:bg-slate-950/50 dark:text-slate-200"
-          }`}
-        >
-          {json}
-        </pre>
+        <div className="p-4">
+          <ReactJson
+            src={jsonData}
+            theme={"rjv-default"}
+            iconStyle="triangle"
+            displayDataTypes={false}
+            displayObjectSize={true}
+            enableClipboard={true}
+            collapsed={false}
+            name={false}
+            style={{
+              backgroundColor: "transparent",
+              fontSize: "0.75rem",
+              fontFamily: "ui-monospace, monospace",
+            }}
+          />
+        </div>
       </ScrollArea>
     </div>
   );

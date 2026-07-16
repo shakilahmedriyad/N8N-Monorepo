@@ -70,6 +70,7 @@ export const ExecutionList = ({
         <EntityItem
           id={item.id}
           title={item.workflowName}
+          status={item.status}
           href={`/executions/${item.id}`}
           image={
             <div>
@@ -77,19 +78,57 @@ export const ExecutionList = ({
             </div>
           }
           subtitle={
-            <p>
-              Finished{" "}
-              {formatDistanceToNow(item.finishedAt, {
-                addSuffix: true,
-              })}{" "}
-              {""} &bull; Started{" "}
-              {formatDistanceToNow(item.startedAt, {
-                addSuffix: true,
-              })}
-            </p>
+            <ExecutionSubtitle
+              createdAt={item.createdAt}
+              startedAt={item.startedAt}
+              finishedAt={item.finishedAt}
+            />
           }
         />
       )}
     />
+  );
+};
+
+export const ExecutionSubtitle = ({
+  finishedAt,
+  startedAt,
+  createdAt,
+}: {
+  finishedAt: Date | null;
+  startedAt: Date | null;
+  createdAt: Date;
+}) => {
+  return (
+    <>
+      {finishedAt && startedAt && (
+        <p>
+          Finished{" "}
+          {formatDistanceToNow(finishedAt, {
+            addSuffix: true,
+          })}{" "}
+          {""} &bull; Started{" "}
+          {formatDistanceToNow(startedAt, {
+            addSuffix: true,
+          })}
+        </p>
+      )}
+      {!finishedAt && startedAt && (
+        <p>
+          Started{" "}
+          {formatDistanceToNow(startedAt, {
+            addSuffix: true,
+          })}
+        </p>
+      )}
+      {!finishedAt && !startedAt && (
+        <p>
+          Queued{" "}
+          {formatDistanceToNow(createdAt, {
+            addSuffix: true,
+          })}
+        </p>
+      )}
+    </>
   );
 };
