@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import {
   Dialog,
@@ -30,7 +30,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-
+import { Plus, Trash2 } from "lucide-react";
 import { useReactFlow } from "@xyflow/react";
 
 const httpExecutionSchema = z.object({
@@ -41,9 +41,17 @@ const httpExecutionSchema = z.object({
       /^[A-Za-z_$][A-Za-z0-9_$]*$/,
       "Must start with letter, _, or $ and contain only letters, numbers, _, or $",
     ),
-  url: z.url("Please enter a valid URL"),
+  url: z.string().url("Please enter a valid URL"),
   method: z.enum(["GET", "PATCH", "POST", "DELETE"]),
   body: z.string().optional(),
+  headers: z
+    .array(
+      z.object({
+        key: z.string().min(1, "Header name is required"),
+        value: z.string().min(1, "Header value is required"),
+      }),
+    )
+    .optional(),
 });
 
 type HttpExecutionFormData = z.infer<typeof httpExecutionSchema>;
@@ -68,6 +76,7 @@ export default function HttpExecutionDialog({
     handleSubmit,
     setValue,
     watch,
+    control,
     formState: { errors },
   } = useForm<HttpExecutionFormData>({
     resolver: zodResolver(httpExecutionSchema),
@@ -76,7 +85,13 @@ export default function HttpExecutionDialog({
       url: defaultValues?.url || "",
       method: defaultValues?.method || "GET",
       body: defaultValues?.body || "",
+      headers: defaultValues?.headers || [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "headers",
   });
 
   const method = watch("method");
@@ -99,7 +114,7 @@ export default function HttpExecutionDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild />
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>HTTP Request</DialogTitle>
           <DialogDescription>
@@ -165,6 +180,69 @@ export default function HttpExecutionDialog({
               </Select>
               {errors.method && (
                 <FieldError>{errors.method.message}</FieldError>
+              )}
+            </Field>
+
+            {/* Headers Section */}
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel>Headers</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => append({ key: "", value: "" })}
+                  className="gap-1"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Header
+                </Button>
+              </div>
+              <FieldDescription>
+                Add custom headers like Authorization, Content-Type, etc.
+              </FieldDescription>
+
+              {fields.length > 0 && (
+                <div className="space-y-3 mt-3">
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex gap-2 items-start p-3 rounded-lg border bg-muted/50"
+                    >
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          placeholder="Header name (e.g., Authorization)"
+                          {...register(`headers.${index}.key`)}
+                        />
+                        {errors.headers?.[index]?.key && (
+                          <FieldError>
+                            {errors.headers[index]?.key?.message}
+                          </FieldError>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          placeholder="Header value (e.g., Bearer {{token}})"
+                          {...register(`headers.${index}.value`)}
+                        />
+                        {errors.headers?.[index]?.value && (
+                          <FieldError>
+                            {errors.headers[index]?.value?.message}
+                          </FieldError>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => remove(index)}
+                        className="shrink-0"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               )}
             </Field>
 

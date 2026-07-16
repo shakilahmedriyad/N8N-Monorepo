@@ -4,8 +4,6 @@ import { GlobeIcon } from "lucide-react";
 import { memo, useState } from "react";
 import BaseExecutionNode from "../Base-execution-node/base-execution-node";
 import HttpExecutionDialog from "./HttpExecutionDialog";
-import useExecuteSubscription from "@/features/editor/hooks/use-execute-subscription";
-import { NodeStatus } from "@/components/react-flow/node-status-indicator";
 import useNodeStatusStore from "@/store/node-status-store";
 
 type HtttpExecutionNodeProps = {

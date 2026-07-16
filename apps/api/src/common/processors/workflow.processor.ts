@@ -73,7 +73,6 @@ export class WorkflowProcessor extends WorkerHost {
 
       return response;
     } catch (error) {
-      console.log('processor:', error);
       await this.executionService.errorExecution(
         job.data.executionId,
         error as unknown as object,
