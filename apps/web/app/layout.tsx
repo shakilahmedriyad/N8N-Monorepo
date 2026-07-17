@@ -16,7 +16,7 @@ const montserratHeading = Montserrat({
 const raleway = Raleway({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
-  title: "N8N",
+  title: "Automation Studio",
   description: "Your automation companion",
 };
 

@@ -17,20 +17,30 @@ export class GeminiNodeExecutor extends BaseNodeExecutor {
     super(GeminiNodeExecutor.name);
   }
 
+  protected parseGeminiContent(content: string | undefined) {
+    try {
+      if (content) return JSON.parse(content);
+      return '';
+    } catch (error) {
+      return content;
+    }
+  }
+
   public async executeNode(
     node: NodeModel,
     context: ExecutionContextDto,
   ): Promise<any> {
     try {
       await this.statusPubSubService.publishLoading(node.id, context.userId);
-      const data = context.currentNodeInput as unknown as GeminiContextDto;
+      const data = context.currentNodeInput;
+      const prompt = this.resolveInput(data.prompt, context);
       const ai = new GoogleGenAI({
         apiKey: data.apiKey!,
       });
 
       const response = await ai.models.generateContent({
         model: data.model,
-        contents: data.prompt,
+        contents: prompt,
         config: {
           temperature: data.temperature,
         },
@@ -40,7 +50,7 @@ export class GeminiNodeExecutor extends BaseNodeExecutor {
       return {
         status: 200,
         statusText: 'ok',
-        response: response.text,
+        response: this.parseGeminiContent(response.text),
       };
     } catch (error) {
       this.statusPubSubService.publishError(node.id, context.userId);

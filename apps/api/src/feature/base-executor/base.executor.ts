@@ -69,7 +69,7 @@ export abstract class BaseNodeExecutor {
     }
   }
 
-  protected resolveInput(input: any, context: ExecutionContextDto): any {
+  protected resolveInput<T>(input: T, context: ExecutionContextDto): T {
     if (typeof input === 'string') {
       try {
         const template = Handlebars.compile(input);
@@ -79,11 +79,11 @@ export abstract class BaseNodeExecutor {
           try {
             return JSON.parse(result);
           } catch {
-            return result;
+            return result as T;
           }
         }
 
-        return result;
+        return result as T;
       } catch (error: any) {
         this.logger.warn(`Failed to resolve template: ${input}`, error.message);
         return input;
@@ -91,7 +91,7 @@ export abstract class BaseNodeExecutor {
     }
 
     if (Array.isArray(input)) {
-      return input.map((item) => this.resolveInput(item, context));
+      return input.map((item) => this.resolveInput(item, context)) as T;
     }
 
     if (typeof input === 'object' && input !== null) {
@@ -99,7 +99,7 @@ export abstract class BaseNodeExecutor {
       for (const [key, value] of Object.entries(input)) {
         resolved[key] = this.resolveInput(value, context);
       }
-      return resolved;
+      return resolved as T;
     }
 
     return input;

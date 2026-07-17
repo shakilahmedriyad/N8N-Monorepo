@@ -138,6 +138,34 @@ export function GeminiExecutionDialog({
         </DialogHeader>
 
         <FieldGroup className="py-4 space-y-4">
+          {/* Variable Name Field */}
+          <Field>
+            <FieldLabel
+              htmlFor="variable-name"
+              className="font-body text-sm font-medium"
+            >
+              Variable Name <span className="text-destructive">*</span>
+            </FieldLabel>
+            <Input
+              id="variable-name"
+              placeholder="e.g., geminiResponse"
+              value={formData.variable}
+              onChange={(e) => handleInputChange("variable", e.target.value)}
+              className={errors.variable ? "border-destructive" : ""}
+            />
+            {errors.variableName && (
+              <p className="text-xs text-destructive mt-1">
+                {errors.variableName}
+              </p>
+            )}
+            <FieldDescription>
+              Store the AI response in a variable. Use it in later steps like:{" "}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">
+                {`{{${formData.variable || "variableName"}}}`}
+              </code>
+            </FieldDescription>
+          </Field>
+
           {/* API Key Field */}
           <Field>
             <FieldLabel
@@ -287,34 +315,6 @@ export function GeminiExecutionDialog({
             )}
             <FieldDescription>
               Maximum number of tokens to generate (1-32768)
-            </FieldDescription>
-          </Field>
-
-          {/* Variable Name Field */}
-          <Field>
-            <FieldLabel
-              htmlFor="variable-name"
-              className="font-body text-sm font-medium"
-            >
-              Variable Name <span className="text-destructive">*</span>
-            </FieldLabel>
-            <Input
-              id="variable-name"
-              placeholder="e.g., geminiResponse"
-              value={formData.variable}
-              onChange={(e) => handleInputChange("variable", e.target.value)}
-              className={errors.variable ? "border-destructive" : ""}
-            />
-            {errors.variableName && (
-              <p className="text-xs text-destructive mt-1">
-                {errors.variableName}
-              </p>
-            )}
-            <FieldDescription>
-              Store the AI response in a variable. Use it in later steps like:{" "}
-              <code className="text-xs bg-muted px-1 py-0.5 rounded">
-                {`{{${formData.variable || "variableName"}}}`}
-              </code>
             </FieldDescription>
           </Field>
         </FieldGroup>

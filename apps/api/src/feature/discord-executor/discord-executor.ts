@@ -7,6 +7,11 @@ import { StatusPubSubService } from '../pub-sub/Status-Pub-Sub.service';
 
 interface DiscordNodeData {
   webhookUrl: string;
+  username?: string;
+  avatarUrl?: string;
+  title?: string;
+  description?: string;
+  color?: string;
 }
 
 @Injectable()
@@ -29,25 +34,30 @@ export class DiscordNodeExecutor extends BaseNodeExecutor {
 
       const data = node.data as unknown as DiscordNodeData;
       const url = this.resolveInput(data.webhookUrl, context);
+      const description = this.resolveInput(data.description, context);
+      if (!description) {
+        throw new BadRequestException('No description is selected');
+      }
       if (!url) {
         throw new BadRequestException('webhook URL not found');
       }
       const response = await axios.post(url, {
-        username: 'Workflow Engine',
+        username: data.username || 'Workflow Engine',
         avatar_url:
+          data.avatarUrl ||
           'https://unsplash.com/photos/man-in-black-button-up-shirt-ZHvM3XIOHoE',
-        content: 'Node executed successfully.',
+        content: data.title || 'Workflow executed successfully.',
         embeds: [
           {
             title: 'Execution Complete',
             description: `\`\`\`json
-${JSON.stringify(context.previousNodeOutputs, null, 2)}
+${JSON.stringify(description, null, 2)}
 \`\`\``,
             color: 65280,
           },
         ],
       });
-
+      console.log(response.data);
       /**
        * publishing success of process
        */

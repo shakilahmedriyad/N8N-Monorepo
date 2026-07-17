@@ -14,7 +14,7 @@ import { StatusPubSubService } from '../pub-sub/Status-Pub-Sub.service';
 interface HttpNodeData {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  headers?: Record<string, string>;
+  headers?: Record<string, string>[];
   body?: any;
   queryParams?: Record<string, string>;
   timeout?: number;
@@ -60,6 +60,17 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
     }
   }
 
+  protected convertHeadersArrayToObject(
+    headers: Record<string, string>[] | undefined,
+  ): Record<string, string> {
+    const headersObject: Record<string, string> = {};
+    if (headers)
+      for (const head of headers) {
+        headersObject[head.key] = head.value;
+      }
+    return headersObject;
+  }
+
   protected async executeNode(
     node: NodeModel,
     context: ExecutionContextDto,
@@ -77,13 +88,12 @@ export class HttpNodeExecutor extends BaseNodeExecutor {
       await this.statusPubSubService.publishError(node.id, context.userId);
       throw new BadRequestException('API variable is required');
     }
-
     const config: AxiosRequestConfig = {
       method: data.method,
       url,
       headers: {
         'Content-Type': 'application/json',
-        ...headers,
+        ...this.convertHeadersArrayToObject(headers),
       },
       timeout: data.timeout || 30000,
     };
